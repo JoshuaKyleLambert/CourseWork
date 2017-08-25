@@ -6,7 +6,11 @@ import java.util.Arrays;
  * Implementation of Merge & Insertion sort Classic Algorithms as found in
  * the Corman Text.
  *
- * This program will also output runtime for performance testing.
+ * This program will also output runtimes for performance testing.
+ *
+ * Any easy to view Histogram is also available.
+ *
+ * Running the program makes usage clear.
  *
  */
 public class Project2 {
@@ -17,11 +21,12 @@ public class Project2 {
 
         java.util.Scanner input = new java.util.Scanner(System.in);
 
-
         int iterations;
+        int maxSize;
+        int stepSize, markSize;
 
         System.out.print("Enter set size, integer value between 2 - 1,000,000:");
-        int maxSize = input.nextInt();
+        maxSize = input.nextInt();
 
         while(maxSize < 2 || maxSize > 1000000){
             System.out.println("Enter set size, integer value between 2 - 1,000,000:");
@@ -36,8 +41,21 @@ public class Project2 {
             iterations = input.nextInt();
         }
 
-        for (int sampleSize = 1; sampleSize <= maxSize; sampleSize++){
-            runTests(sampleSize,iterations);
+        System.out.print("Enter Step Size for Tests:");
+        stepSize = input.nextInt();
+        while(stepSize < 1 || stepSize > maxSize){
+            System.out.print("Input Proper step size");
+        }
+
+        System.out.print("Enter value for tick marks 1 - 1000 nano seconds: ");
+        markSize = input.nextInt();
+        while ( markSize < 1 || markSize > 1000){
+            System.out.print("Choose proper value:");
+            markSize = input.nextInt();
+        }
+
+        for (int sampleSize = 1; sampleSize <= maxSize; sampleSize += stepSize){
+            runTests(sampleSize, iterations, markSize);
         }
 
 
@@ -111,7 +129,7 @@ public class Project2 {
             merge(A, p, q, r);
         }
     }
-    private static void runTests(int size, int iterations){
+    private static void runTests(int size, int iterations, int markSize){
 
         long totalTime = 0;
         long beginTime, endTime;
@@ -145,10 +163,16 @@ public class Project2 {
 
         //System.out.println(Arrays.toString(test));
 
-        System.out.println("MERGE SORT:     N=" + size + " Runs=" + iterations +" Mean RunTime =  " + totalTime / iterations + "ns.");
+        //System.out.print("\nMERGE SORT:     N=" + size + " Runs=" + iterations +" Mean RunTime =  " + totalTime / iterations + "ns.");
+        System.out.print("\n    MERGE SORT:");
+        for( int i = 0; i < totalTime / iterations; i += markSize) {
+            System.out.print("-");
+        }
+        System.out.print("    N=" + size);
+        System.out.print("  MEANTIME: " + totalTime / iterations + "ns");
 
         sampleSet = setCopy.clone();
-
+        totalTime = 0;
         for( int i = 0; i < iterations; i++) {
             beginTime = System.nanoTime();
             insertionSort(sampleSet);
@@ -159,9 +183,12 @@ public class Project2 {
 
         }
 
-        System.out.println("INSERTION SORT: N=" + size + " Runs=" + iterations +" Mean RunTime =  " + totalTime / iterations + "ns.");
-
-
+        //System.out.println("INSERTION SORT: N=" + size + " Runs=" + iterations +" Mean RunTime =  " + totalTime / iterations + "ns.");
+        System.out.print("\nINSERTION SORT:");
+        for( int i = 0; i < totalTime / iterations; i += markSize) {
+            System.out.print("#");
+        }
+        System.out.print("  MEANTIME: " + totalTime / iterations + "ns");
     }
     private static void promptUser(){
 
