@@ -17,18 +17,17 @@ public class Project2 {
 
         java.util.Scanner input = new java.util.Scanner(System.in);
 
-        long totalTime = 0;
-        long beginTime, endTime;
+
         int iterations;
 
         System.out.print("Enter set size, integer value between 2 - 1,000,000:");
-        int size = input.nextInt();
+        int maxSize = input.nextInt();
 
-        while(size < 2 || size > 1000000){
+        while(maxSize < 2 || maxSize > 1000000){
             System.out.println("Enter set size, integer value between 2 - 1,000,000:");
-            size = input.nextInt();
+            maxSize = input.nextInt();
         }
-        System.out.print("Enter number of times to run sort: ");
+        System.out.print("Enter number of times to run sorts: ");
 
         iterations = input.nextInt();
 
@@ -37,54 +36,16 @@ public class Project2 {
             iterations = input.nextInt();
         }
 
-
-        int[] sampleSet = new int[size];
-
-        java.util.Random generator = new java.util.Random(2);
-
-        for(int i = 0; i < size; i++ ){
-            sampleSet[i] = generator.nextInt();
+        for (int sampleSize = 1; sampleSize <= maxSize; sampleSize++){
+            runTests(sampleSize,iterations);
         }
-        int[] setCopy = sampleSet.clone();
-
-
-
-
-
-        //int[] test = { 3, 4 , 6 , 6 , 6 , 8 , 8, 25,  67,};
-        //System.out.println(Arrays.toString(test));
-
-        for( int i = 0; i < iterations; i++) {
-            beginTime = System.nanoTime();
-            mergeSort(sampleSet);
-            endTime = System.nanoTime();
-
-            totalTime += endTime - beginTime;
-            sampleSet = setCopy.clone();
-
-        }
-
-        //System.out.println(Arrays.toString(test));
-
-        System.out.println("\n\nMERGE SORT:\n\nN =  " + size + "\nRuns = " + iterations +"\nMean RunTime =  " + totalTime / iterations + "ns.");
-
-        sampleSet = setCopy.clone();
-
-        for( int i = 0; i < iterations; i++) {
-            beginTime = System.nanoTime();
-            insertionSort(sampleSet);
-            endTime = System.nanoTime();
-
-            totalTime += endTime - beginTime;
-            sampleSet = setCopy.clone();
-
-        }
-
-        System.out.println("\n\nINSERTION SORT:\n\nN =  " + size + "\nRuns = " + iterations +"\nMean RunTime =  " + totalTime / iterations + "ns.");
-
 
 
     }
+
+    /*
+    *   Sort Implementations
+    */
 
     public static void insertionSort(int[] a) {
         int i;
@@ -150,7 +111,58 @@ public class Project2 {
             merge(A, p, q, r);
         }
     }
+    private static void runTests(int size, int iterations){
 
+        long totalTime = 0;
+        long beginTime, endTime;
+
+
+        int[] sampleSet = new int[size];
+
+        java.util.Random generator = new java.util.Random(2);
+
+        for(int i = 0; i < size; i++ ){
+            sampleSet[i] = generator.nextInt();
+        }
+        int[] setCopy = sampleSet.clone();
+
+
+
+
+
+        //int[] test = { 3, 4 , 6 , 6 , 6 , 8 , 8, 25,  67,};
+        //System.out.println(Arrays.toString(test));
+
+        for( int i = 0; i < iterations; i++) {
+            beginTime = System.nanoTime();
+            mergeSort(sampleSet);
+            endTime = System.nanoTime();
+
+            totalTime += endTime - beginTime;
+            sampleSet = setCopy.clone();
+
+        }
+
+        //System.out.println(Arrays.toString(test));
+
+        System.out.println("MERGE SORT:     N=" + size + " Runs=" + iterations +" Mean RunTime =  " + totalTime / iterations + "ns.");
+
+        sampleSet = setCopy.clone();
+
+        for( int i = 0; i < iterations; i++) {
+            beginTime = System.nanoTime();
+            insertionSort(sampleSet);
+            endTime = System.nanoTime();
+
+            totalTime += endTime - beginTime;
+            sampleSet = setCopy.clone();
+
+        }
+
+        System.out.println("INSERTION SORT: N=" + size + " Runs=" + iterations +" Mean RunTime =  " + totalTime / iterations + "ns.");
+
+
+    }
     private static void promptUser(){
 
     }
