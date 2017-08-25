@@ -16,18 +16,19 @@ public class Project2 {
     public static void main(String[] args){
 
         java.util.Scanner input = new java.util.Scanner(System.in);
-        System.out.print("Enter set size, integer value between 2 - 1,000,000:");
 
-        int size = input.nextInt();
         long totalTime = 0;
         long beginTime, endTime;
         int iterations;
+
+        System.out.print("Enter set size, integer value between 2 - 1,000,000:");
+        int size = input.nextInt();
 
         while(size < 2 || size > 1000000){
             System.out.println("Enter set size, integer value between 2 - 1,000,000:");
             size = input.nextInt();
         }
-        System.out.print("Enter number of times to run test: ");
+        System.out.print("Enter number of times to run sort: ");
 
         iterations = input.nextInt();
 
@@ -45,8 +46,12 @@ public class Project2 {
             sampleSet[i] = generator.nextInt();
         }
         int[] setCopy = sampleSet.clone();
-        //int[] test = { 3, 4 , 6 , 6 , 6 , 8 , 8, 25,  67,};
 
+
+
+
+
+        //int[] test = { 3, 4 , 6 , 6 , 6 , 8 , 8, 25,  67,};
         //System.out.println(Arrays.toString(test));
 
         for( int i = 0; i < iterations; i++) {
@@ -60,9 +65,40 @@ public class Project2 {
         }
 
         //System.out.println(Arrays.toString(test));
+
         System.out.println("\n\nMERGE SORT:\n\nN =  " + size + "\nRuns = " + iterations +"\nMean RunTime =  " + totalTime / iterations + "ns.");
+
+        sampleSet = setCopy.clone();
+
+        for( int i = 0; i < iterations; i++) {
+            beginTime = System.nanoTime();
+            insertionSort(sampleSet);
+            endTime = System.nanoTime();
+
+            totalTime += endTime - beginTime;
+            sampleSet = setCopy.clone();
+
+        }
+
+        System.out.println("\n\nINSERTION SORT:\n\nN =  " + size + "\nRuns = " + iterations +"\nMean RunTime =  " + totalTime / iterations + "ns.");
+
+
+
     }
 
+    public static void insertionSort(int[] a) {
+        int i;
+        int key;
+        for(int j = 1;j < a.length; j++){
+            key = a[j];
+            i = j - 1;
+            while(i >= 0 && a[i] > key){
+                a[i + 1] = a[i];
+                i = i - 1;
+            }
+            a[i + 1] = key;
+        }
+    }
 
     public static void mergeSort(int[] a){
         int p = 0;
