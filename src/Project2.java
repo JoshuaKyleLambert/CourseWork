@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Created by Joshua Lambert on 8/24/2017.
  *
@@ -9,68 +11,103 @@
  */
 public class Project2 {
 
-    public static void mergeSort(int[] a, int p, int q , int r){
 
 
-    }
+    public static void main(String[] args){
 
-    public static void mergeSort(int[] a, int p, int r){
+        java.util.Scanner input = new java.util.Scanner(System.in);
+        System.out.print("Enter set size, integer value between 2 - 1,000,000:");
 
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    public static void mergeSort(int[] list) {
-        if (list.length > 1) {
-            // Merge sort the first half
-            int[] firstHalf = new int[list.length / 2];
-            System.arraycopy(list, 0, firstHalf, 0, list.length / 2);
-            mergeSort(firstHalf);
-
-            // Merge sort the second half
-            int secondHalfLength = list.length - list.length / 2;
-            int[] secondHalf = new int[secondHalfLength];
-            System.arraycopy(list, list.length / 2,
-                    secondHalf, 0, secondHalfLength);
-            mergeSort(secondHalf);
-
-            // Merge firstHalf with secondHalf into list
-            merge(firstHalf, secondHalf, list);
+        int size = input.nextInt();
+        long totalTime = 0;
+        while(size < 2 || size > 1000000){
+            System.out.println("Enter set size, integer value between 2 - 1,000,000:");
+            size = input.nextInt();
         }
+        System.out.print("Enter number of time to run test: ");
+        int iterations = input.nextInt();
+        while(iterations > 100000){
+            System.out.println("Be a bit more conservative.");
+            iterations = input.nextInt();
+        }
+
+
+
+        int[] test = new int[size];
+
+        java.util.Random generator = new java.util.Random(2);
+
+        for(int i = 0; i < size; i++ ){
+            test[i] = generator.nextInt();
+        }
+        int[] setCopy = test.clone();
+        //int[] test = { 3, 4 , 6 , 6 , 6 , 8 , 8, 25,  67,};
+
+        System.out.println(Arrays.toString(test));
+
+        for( int i = 0; i < iterations; i++) {
+            long beginTime = System.nanoTime();
+            mergeSort(test);
+            long endTime = System.nanoTime();
+
+            totalTime = endTime - beginTime;
+            test = setCopy.clone();
+
+        }
+
+        System.out.println(Arrays.toString(test));
+        System.out.println("Average time for " + iterations +" runs: " + totalTime / iterations + "ns.");
     }
 
-    /**
-     * Merge two sorted lists
-     */
-    public static void merge(int[] list1, int[] list2, int[] temp) {
-        int current1 = 0; // Current index in list1
-        int current2 = 0; // Current index in list2
-        int current3 = 0; // Current index in temp
 
-        while (current1 < list1.length && current2 < list2.length) {
-            if (list1[current1] < list2[current2]) {
-                temp[current3++] = list1[current1++];
+    public static void mergeSort(int[] a){
+        int p = 0;
+        int r = a.length;
+        mergeSort(a, p, r);
+
+    }
+
+
+    public static void merge(int[] A, int p, int q , int r){
+
+        int n1 = q - p ;
+        int n2 = r - q;
+        int i, j;
+
+        int[] L = new int[n1 + 1];
+        int[] R = new int[n2 + 1];
+
+        for( i = 0; i < n1; i++){
+            L[i] = A[p + i ];
+        }
+        for ( j = 0; j < n2; j++){
+            R[j] = A[q + j];
+        }
+
+        L[n1] = Integer.MAX_VALUE;
+        R[n2] = Integer.MAX_VALUE;
+
+        i = 0;
+        j = 0;
+
+        for (int k = p; k < r; k++){
+            if (L[i] <= R[j]) {
+                A[k] = L[i];
+                i = i + 1;
             } else {
-                temp[current3++] = list2[current2++];
+                A[k] = R[j];
+                j = j + 1;
             }
         }
+    }
 
-        while (current1 < list1.length) {
-            temp[current3++] = list1[current1++];
-        }
-
-        while (current2 < list2.length) {
-            temp[current3++] = list2[current2++];
+    public static void mergeSort(int[] A, int p, int r){
+        int q;
+        if (p < r){
+            q = (p + r ) / 2;
+            mergeSort(A, p, q);
+            mergeSort(A,q + 1, r);
+            merge(A, p, q, r);
         }
     }
 
