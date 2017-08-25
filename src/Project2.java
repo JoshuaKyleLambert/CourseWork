@@ -20,43 +20,47 @@ public class Project2 {
 
         int size = input.nextInt();
         long totalTime = 0;
+        long beginTime, endTime;
+        int iterations;
+
         while(size < 2 || size > 1000000){
             System.out.println("Enter set size, integer value between 2 - 1,000,000:");
             size = input.nextInt();
         }
-        System.out.print("Enter number of time to run test: ");
-        int iterations = input.nextInt();
-        while(iterations > 100000){
-            System.out.println("Be a bit more conservative.");
+        System.out.print("Enter number of times to run test: ");
+
+        iterations = input.nextInt();
+
+        while(iterations > 100000 || iterations < 1){
+            System.out.print("Be a bit more conservative, : ");
             iterations = input.nextInt();
         }
 
 
-
-        int[] test = new int[size];
+        int[] sampleSet = new int[size];
 
         java.util.Random generator = new java.util.Random(2);
 
         for(int i = 0; i < size; i++ ){
-            test[i] = generator.nextInt();
+            sampleSet[i] = generator.nextInt();
         }
-        int[] setCopy = test.clone();
+        int[] setCopy = sampleSet.clone();
         //int[] test = { 3, 4 , 6 , 6 , 6 , 8 , 8, 25,  67,};
 
-        System.out.println(Arrays.toString(test));
+        //System.out.println(Arrays.toString(test));
 
         for( int i = 0; i < iterations; i++) {
-            long beginTime = System.nanoTime();
-            mergeSort(test);
-            long endTime = System.nanoTime();
+            beginTime = System.nanoTime();
+            mergeSort(sampleSet);
+            endTime = System.nanoTime();
 
-            totalTime = endTime - beginTime;
-            test = setCopy.clone();
+            totalTime += endTime - beginTime;
+            sampleSet = setCopy.clone();
 
         }
 
-        System.out.println(Arrays.toString(test));
-        System.out.println("Average time for " + iterations +" runs: " + totalTime / iterations + "ns.");
+        //System.out.println(Arrays.toString(test));
+        System.out.println("\n\nMERGE SORT:\n\nN =  " + size + "\nRuns = " + iterations +"\nMean RunTime =  " + totalTime / iterations + "ns.");
     }
 
 
@@ -109,6 +113,10 @@ public class Project2 {
             mergeSort(A,q + 1, r);
             merge(A, p, q, r);
         }
+    }
+
+    private static void promptUser(){
+
     }
 
 }
