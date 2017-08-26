@@ -3,10 +3,10 @@ import java.util.Arrays;
 /**
  * Created by Joshua Lambert on 8/24/2017.
  *
- * Implementation of Merge & Insertion sort Classic Algorithms as found in
- * the Corman Text.
+ * Java Implementation of Classical sort Algorithms Merge & Insertion sort
+ * as found in Introduction to Algorithms 3rd ed.
  *
- * This program will also output runtimes for performance testing.
+ * This program will also output mean run times for performance testing.
  *
  * Any easy to view Histogram is also available.
  *
@@ -15,31 +15,38 @@ import java.util.Arrays;
  */
 public class Project2 {
 
-
-
     public static void main(String[] args){
 
         java.util.Scanner input = new java.util.Scanner(System.in);
 
-        int iterations;
-        int maxSize;
-        int stepSize, markSize;
+        int iterations = 50;
+        int maxSize = 800;
+        int stepSize = 10, markSize = 500, startSize = 1, offset = 15000;
 
-        System.out.print("Enter set size, integer value between 2 - 1,000,000:");
-        maxSize = input.nextInt();
 
+        System.out.print("Enter set size, integer value between 2 - 1,000,000: ");
+       maxSize = input.nextInt();
         while(maxSize < 2 || maxSize > 1000000){
-            System.out.println("Enter set size, integer value between 2 - 1,000,000:");
+            System.out.println("Enter set size, integer value between 2 - 1,000,000: ");
             maxSize = input.nextInt();
         }
+
+        System.out.print("Enter starting set, blank for 1: ");
+        startSize = input.nextInt();
+        while( startSize < 0 || startSize > maxSize - 1){
+
+            System.out.print("Enter a valid starting number: ");
+            startSize = input.nextInt();
+        }
+
+
         System.out.print("Enter number of times to run sorts: ");
-
         iterations = input.nextInt();
-
         while(iterations > 100000 || iterations < 1){
             System.out.print("Be a bit more conservative, : ");
             iterations = input.nextInt();
         }
+
 
         System.out.print("Enter Step Size for Tests:");
         stepSize = input.nextInt();
@@ -47,15 +54,17 @@ public class Project2 {
             System.out.print("Input Proper step size");
         }
 
-        System.out.print("Enter value for tick marks 1 - 1000 nano seconds: ");
+
+        System.out.print("Enter scalar value for tick marks 1 - 1000 nano seconds: ");
         markSize = input.nextInt();
         while ( markSize < 1 || markSize > 1000){
             System.out.print("Choose proper value:");
             markSize = input.nextInt();
         }
 
-        for (int sampleSize = 1; sampleSize <= maxSize; sampleSize += stepSize){
-            runTests(sampleSize, iterations, markSize);
+
+        for (int sampleSize = startSize; sampleSize <= maxSize; sampleSize += stepSize){
+            runTests(sampleSize, iterations, markSize, offset);
         }
 
 
@@ -129,7 +138,7 @@ public class Project2 {
             merge(A, p, q, r);
         }
     }
-    private static void runTests(int size, int iterations, int markSize){
+    private static void runTests(int size, int iterations, int markSize, int offset){
 
         long totalTime = 0;
         long beginTime, endTime;
@@ -165,8 +174,8 @@ public class Project2 {
 
         //System.out.print("\nMERGE SORT:     N=" + size + " Runs=" + iterations +" Mean RunTime =  " + totalTime / iterations + "ns.");
         System.out.print("\n    MERGE SORT:");
-        for( int i = 0; i < totalTime / iterations; i += markSize) {
-            System.out.print("-");
+        for( int i = offset; i < totalTime / iterations; i += markSize) {
+            System.out.print("=");
         }
         System.out.print("    N=" + size);
         System.out.print("  MEANTIME: " + totalTime / iterations + "ns");
@@ -185,7 +194,7 @@ public class Project2 {
 
         //System.out.println("INSERTION SORT: N=" + size + " Runs=" + iterations +" Mean RunTime =  " + totalTime / iterations + "ns.");
         System.out.print("\nINSERTION SORT:");
-        for( int i = 0; i < totalTime / iterations; i += markSize) {
+        for( int i = offset; i < totalTime / iterations; i += markSize) {
             System.out.print("#");
         }
         System.out.print("  MEANTIME: " + totalTime / iterations + "ns");
