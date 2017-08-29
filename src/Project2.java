@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 /**
  * Created by Joshua Lambert on 8/24/2017.
  *
@@ -17,56 +15,7 @@ public class Project2 {
 
     public static void main(String[] args){
 
-        java.util.Scanner input = new java.util.Scanner(System.in);
-
-        int iterations = 50;
-        int maxSize = 800;
-        int stepSize = 10, markSize = 500, startSize = 1, offset = 15000;
-
-
-        System.out.print("Enter set size, integer value between 2 - 1,000,000: ");
-       maxSize = input.nextInt();
-        while(maxSize < 2 || maxSize > 1000000){
-            System.out.println("Enter set size, integer value between 2 - 1,000,000: ");
-            maxSize = input.nextInt();
-        }
-
-        System.out.print("Enter starting set, blank for 1: ");
-        startSize = input.nextInt();
-        while( startSize < 0 || startSize > maxSize - 1){
-
-            System.out.print("Enter a valid starting number: ");
-            startSize = input.nextInt();
-        }
-
-
-        System.out.print("Enter number of times to run sorts: ");
-        iterations = input.nextInt();
-        while(iterations > 100000 || iterations < 1){
-            System.out.print("Be a bit more conservative, : ");
-            iterations = input.nextInt();
-        }
-
-
-        System.out.print("Enter Step Size for Tests:");
-        stepSize = input.nextInt();
-        while(stepSize < 1 || stepSize > maxSize){
-            System.out.print("Input Proper step size");
-        }
-
-
-        System.out.print("Enter scalar value for tick marks 1 - 1000 nano seconds: ");
-        markSize = input.nextInt();
-        while ( markSize < 1 || markSize > 1000){
-            System.out.print("Choose proper value:");
-            markSize = input.nextInt();
-        }
-
-
-        for (int sampleSize = startSize; sampleSize <= maxSize; sampleSize += stepSize){
-            runTests(sampleSize, iterations, markSize, offset);
-        }
-
+        promptUser();
 
     }
 
@@ -133,6 +82,7 @@ public class Project2 {
         int q;
         if (p < r){
             q = (p + r ) / 2;
+            // Floor function omitted since integer ignores decimal portion of number
             mergeSort(A, p, q);
             mergeSort(A,q + 1, r);
             merge(A, p, q, r);
@@ -199,8 +149,81 @@ public class Project2 {
         }
         System.out.print("  MEANTIME: " + totalTime / iterations + "ns");
     }
+
     private static void promptUser(){
+        java.util.Scanner input = new java.util.Scanner(System.in);
+
+        int iterations = 10000;
+        int maxSize = 450;
+        int stepSize = 1, markSize = 100, startSize = 400, offset = 15000;
+
+        int choice;
+
+
+        System.out.print(" 1. Run with default values. \n 2. Enter custom parameters. ");
+        choice = input.nextInt();
+
+        while (choice != 1 && choice != 2){
+            System.out.println("Pick 1. or 2. ");
+            choice = input.nextInt();
+        }
+
+        if (choice == 1){
+            for (int sampleSize = startSize; sampleSize <= maxSize; sampleSize += stepSize){
+                runTests(sampleSize, iterations, markSize, offset);
+            }
+
+        } else {
+
+
+        System.out.print("Enter set size, integer value between 2 - 1,000,000: ");
+       maxSize = input.nextInt();
+        while(maxSize < 2 || maxSize > 1000000){
+            System.out.println("Enter set size, integer value between 2 - 1,000,000: ");
+            maxSize = input.nextInt();
+        }
+
+        System.out.print("Enter starting set, blank for 1: ");
+        startSize = input.nextInt();
+        while( startSize < 0 || startSize > maxSize - 1){
+
+            System.out.print("Enter a valid starting number: ");
+            startSize = input.nextInt();
+        }
+
+
+        System.out.print("Enter number of times to run sorts: ");
+        iterations = input.nextInt();
+        while(iterations > 100000 || iterations < 1){
+            System.out.print("Be a bit more conservative, : ");
+            iterations = input.nextInt();
+        }
+
+
+        System.out.print("Enter Step Size for Tests:");
+        stepSize = input.nextInt();
+        while(stepSize < 1 || stepSize > maxSize){
+            System.out.print("Input Proper step size");
+        }
+
+
+        System.out.print("Enter scalar value for tick marks 1 - 1000 nano seconds: ");
+        markSize = input.nextInt();
+        while ( markSize < 1 || markSize > 1000){
+            System.out.print("Choose proper value:");
+            markSize = input.nextInt();
+        }
+
+
+            for (int sampleSize = startSize; sampleSize <= maxSize; sampleSize += stepSize){
+                runTests(sampleSize, iterations, markSize, offset);
+            }
+
+
+        }
+
 
     }
 
 }
+
