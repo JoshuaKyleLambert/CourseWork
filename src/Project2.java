@@ -10,6 +10,20 @@
  *
  * Running the program makes usage clear.
  *
+ * Using the default Settings run the program and show the point of
+ * inflection where merge sort becomes more efficient than insertion sort.
+ * On my setup Merge sort appears to become more efficient N=~420 with.
+ *
+ * SAMPLE PROGRAM OUTPUT  :
+ *
+ MERGE SORT:===================================================    N=418  MEANTIME: 20022ns
+ INSERTION SORT:###############################################  MEANTIME: 19655ns
+ MERGE SORT:==================================================    N=419  MEANTIME: 19982ns
+ INSERTION SORT:################################################  MEANTIME: 19712ns
+ MERGE SORT:======================================================    N=420  MEANTIME: 20319ns
+ INSERTION SORT:################################################  MEANTIME: 19733ns
+ MERGE SORT:====================================================    N=421  MEANTIME: 20169ns
+ *
  */
 public class Project2 {
 
