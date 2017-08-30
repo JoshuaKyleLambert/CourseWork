@@ -1,28 +1,28 @@
 /**
  * Created by Joshua Lambert on 8/24/2017.
- * <p>
+ *
  * Java Implementation of Classical sort Algorithms Merge & Insertion sort
  * as found in Introduction to Algorithms 3rd ed.
- * <p>
+ * <
  * This program will also output mean run times for performance testing.
- * <p>
+ *
  * An easy to view Histogram is also available.
- * <p>
+ *
  * Running the program makes usage clear.
- * <p>
+ *
  * Using the default Settings run the program and show the point of
  * inflection where merge sort becomes more efficient than insertion sort.
  * On my setup Merge sort appears to become more efficient N=~420.
- * <p>
- * <p>
+ *
+ *
  * DEFAULT VALUES:
  * iterations = 10000;
  * maxSize = 450;
  * stepSize = 1, markSize = 100, startSize = 400, offset = 15000;
- * <p>
- * <p>
+ *
+ *
  * SAMPLE PROGRAM OUTPUT  :
- * <p>
+ *
  * MERGE SORT:===================================================    N=418  MEANTIME: 20022ns
  * INSERTION SORT:###############################################  MEANTIME: 19655ns
  * MERGE SORT:==================================================    N=419  MEANTIME: 19982ns
