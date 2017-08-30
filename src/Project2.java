@@ -16,6 +16,7 @@
  *
  *
  * DEFAULT VALUES:
+ *
  * iterations = 10000;
  * maxSize = 450;
  * stepSize = 1, markSize = 100, startSize = 400, offset = 15000;
