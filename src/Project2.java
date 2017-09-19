@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Created by Joshua Lambert on 8/24/2017.
  *
@@ -36,7 +38,12 @@ public class Project2 {
 
     public static void main(String[] args) {
 
-        promptUser();
+        int[] test = {9 , 8 , 7 , 6 , 5 , 4 , 3  , 2 , 1, 0};
+        //promptUser();
+
+        mergeSort(test);
+
+        System.out.print(Arrays.toString(test));
 
     }
 
@@ -60,7 +67,7 @@ public class Project2 {
 
     public static void mergeSort(int[] a) {
         int p = 0;
-        int r = a.length;
+        int r = a.length  ;
         mergeSort(a, p, r);
 
     }
@@ -68,7 +75,7 @@ public class Project2 {
 
     public static void merge(int[] A, int p, int q, int r) {
 
-        int n1 = q - p;
+        int n1 = q - p ;
         int n2 = r - q;
         int i, j;
 
