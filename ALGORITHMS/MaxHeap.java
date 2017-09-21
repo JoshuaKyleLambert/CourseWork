@@ -8,7 +8,6 @@ public class MaxHeap {
     public int[] a;
     //swap space
     int swap;
-    int heapSize;
 
     // heapSize may be different from a.length
     public int heapSize;
@@ -60,12 +59,33 @@ public class MaxHeap {
         return a[0];
     }
     public int extractMax(){
-        if ( a.length-1 < 1){
+        int max;
+        if ( heapSize < 0){
             System.out.print("Heap underflow");
         }
+        max = a[0];
+        a[0] = a[heapSize];
+        heapSize = heapSize - 1;
+        heapify(0);
+        return max;
     }
-    public void increaseKey(int i, int key)
-    public void insert(int key)
+
+    public void increaseKey(int i, int key){
+        if ( key < a[i])
+            System.out.print("new Key is smaller than current key");
+        a[i] = key;
+        while ( i > 0 && a[parent(i)] < a[i]){
+            swap = a[parent(i)];
+            a[parent(i)] = a[i];
+            a[i] = swap;
+            i = parent(i);
+        }
+    }
+    public void insert(int key){
+        heapSize = heapSize + 1;
+        a[heapSize] = Integer.MIN_VALUE;
+        increaseKey(heapSize, key);
+    }
 
     private int parent(int i){
         return i/2;
