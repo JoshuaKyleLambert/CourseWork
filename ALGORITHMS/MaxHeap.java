@@ -15,24 +15,22 @@ public class MaxHeap {
     public MaxHeap(int[] a)
 
     public void heapify(int i) {
-    int largest = 0;
-    int swap;
-    int l = left(i);
-    int r = right(i);
+        int largest;
+        int swap;
+        int l = left(i);
+        int r = right(i);
 
-    if (l <= a.length && a[l] > a[i]){
-        largest = l;
-    }
-    else if ( r <= a.length && a[r] > a[largest])
-        largest = r;
-    if (largest != i){
-        swap = a[largest];
-        a[largest] = a[i];
-        a[i] = swap;
-        heapify(largest);
-    }
+        if (l <= a.length - 1 && a[l] > a[i]) largest = l;
+        else largest = i;
+        if (r <= a.length - 1 && a[r] > a[largest]) largest = r;
+        if (largest != i) {
+            swap = a[largest];
+            a[largest] = a[i];
+            a[i] = swap;
+            heapify(largest);
+        }
 
-}
+    }
 
     public void buildHeap()
     // heapsort on a
