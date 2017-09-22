@@ -1,5 +1,4 @@
-
-
+import java.util.Arrays;
 
 public class MaxHeap {
 
@@ -17,21 +16,26 @@ public class MaxHeap {
     public MaxHeap(int[] a){
         this.a = a;
         heapSize = a.length - 1;
+        buildHeap();
     }
 
     public void heapify(int i) {
+        System.out.println(Arrays.toString(a));
         int largest;
 
         int l = left(i);
         int r = right(i);
 
-        if (l <= heapSize && a[l] > a[i]) largest = l;
+        if (l <= heapSize  && a[l] > a[i]){ largest = l;}
         else largest = i;
-        if (r <= heapSize && a[r] > a[largest]) largest = r;
+        if (r <= heapSize  && a[r] > a[largest]){ largest = r;}
+        //System.out.println(heapSize);
+
         if (largest != i) {
             swap = a[largest];
             a[largest] = a[i];
             a[i] = swap;
+            //--heapSize;
             heapify(largest);
         }
 
@@ -39,14 +43,14 @@ public class MaxHeap {
 
     public void buildHeap(){
         heapSize = a.length - 1;
-        for (int i = (a.length-1)/2; i >= 0; i--){
+        for (int i = (a.length - 1 )/2; i >= 0; i--){
             heapify(i);
         }
     }
     // heapsort on a
     public void sort(){
-        buildHeap();
-        for(int i = a.length-1; i >= 1; i--){
+        //buildHeap();
+        for(int i = a.length - 1; i >= 1; i--){
             swap = a[i];
             a[i] = a[0];
             heapSize = heapSize - 1;
@@ -88,13 +92,13 @@ public class MaxHeap {
     }
 
     private int parent(int i){
-        return i/2;
+        return i / 2;
     }
     private int left(int i){
-        return i << 1 ;
+        return (i * 2) + 1 ;
     }
     private int right(int i){
-        return (i << 1) + 1;
+        return (i * 2) + 2 ;
     }
 
 
