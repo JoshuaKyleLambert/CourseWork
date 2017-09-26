@@ -1,4 +1,21 @@
-import java.util.Arrays;
+/**
+ * Joshua lambert
+ * 09/23/2017
+ *
+ * Heap
+ *
+ * Sort
+ *
+ * Priority Queue
+ *
+ * 0 Based
+ *
+ * turn your integer array into a Heap by supplying
+ * it as the argument to the default constructor.
+ *
+ * Be aware the array is referenced and not copied.
+ */
+
 
 public class MaxHeap {
 
@@ -20,7 +37,7 @@ public class MaxHeap {
     }
 
     public void heapify(int i) {
-        System.out.println(Arrays.toString(a));
+
         int largest;
 
         int l = left(i);
@@ -29,6 +46,7 @@ public class MaxHeap {
         if (l <= heapSize && a[l] > a[i]) {
             largest = l;
         } else largest = i;
+
         if (r <= heapSize && a[r] > a[largest]) {
             largest = r;
         }
@@ -51,12 +69,13 @@ public class MaxHeap {
 
     // heapsort on a
     public void sort() {
-        //buildHeap();
+        buildHeap();
         for (int i = a.length - 1; i >= 1; i--) {
             swap = a[i];
             a[i] = a[0];
-            heapSize = heapSize - 1;
-            heapify(1);
+            a[0] = swap;
+            heapSize--;
+            heapify(0);
         }
     }
 
@@ -66,13 +85,16 @@ public class MaxHeap {
     }
 
     public int extractMax() {
+        // if sort was run, heap property is not maintained
+        //buildHeap();
         int max;
         if (heapSize < 0) {
             System.out.print("Heap underflow");
+            //return Integer.MIN_VALUE;
         }
         max = a[0];
         a[0] = a[heapSize];
-        heapSize = heapSize - 1;
+        heapSize = heapSize--;
         heapify(0);
         return max;
     }
@@ -80,7 +102,8 @@ public class MaxHeap {
     public void increaseKey(int i, int key) {
         if (key < a[i])
             System.out.print("new Key is smaller than current key");
-        a[i] = key;
+        else
+            a[i] = key;
         while (i > 0 && a[parent(i)] < a[i]) {
             swap = a[parent(i)];
             a[parent(i)] = a[i];
