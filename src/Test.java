@@ -5,7 +5,7 @@ import java.util.*;
 public class Test {
 
     public static void main(String[] arg0){
-        int[] b = {1, 4, 2, 3, 9, 7, 8, 10, 14, 16};
+        int[] b = {5, 13, 2, 25, 7 , 17, 20, 8 , 4};
         System.out.println("Unsorted , unheaped" + Arrays.toString(b));
         MaxHeap myHeap = new MaxHeap(b);
         //System.out.println("Heaped             " + Arrays.toString(myHeap.a));
