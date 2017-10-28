@@ -5,7 +5,6 @@ public class Graph {
     final int NIL = -1;
 
 
-
     int[][] adj;    // adjacency matrix
     int[] d;        // distance array, distance from source to vertex u
     int[] f;        // Color attribute
@@ -41,7 +40,7 @@ public class Graph {
         d = new int[adj.length];
         pi = new int[adj.length];
 
-        for( int i = 0; i < adj.length; i++) {
+        for (int i = 0; i < adj.length; i++) {
             f[i] = WHITE;
             d[i] = Integer.MAX_VALUE;
             pi[i] = NIL;
@@ -52,11 +51,12 @@ public class Graph {
         pi[s] = NIL;
 
         Q.enqueue(s);
-        while(!Q.isEmpty()) {
+        while (!Q.isEmpty()) {
             int vertex = Q.dequeue();
-            for ( int edge = 0; edge < adj.length; edge++) {
+            for (int edge = 0; edge < adj.length; edge++) {
                 // scan down the adjacency matrix and add connected vertexes to the que.
-                if ( f[edge] == WHITE){
+                if(adj[vertex][edge] == 1)
+                if (f[edge] == WHITE) {
                     f[edge] = GRAY;
                     d[edge] = d[vertex] + 1;
                     pi[edge] = vertex;
@@ -65,23 +65,19 @@ public class Graph {
                 }
                 f[vertex] = BLACK;
 
-
-                if (adj[s] == 0) {
-
-
-                }
-                // for each vertex search its edges and change its color to GRAY if its color is WHITE
-
             }
+            // for each vertex search its edges and change its color to GRAY if its color is WHITE
+
+        }
 
     }
 
-    }
 
     // depth-first search. results in d[], f[], pi[]
     public void dfs() {
     }
 
+    // FIFO Que
     class Que {
         int head = 0;
         int tail = 0;
@@ -104,7 +100,7 @@ public class Graph {
 
         int dequeue() {
             int x = que[head];
-            if ( head == que.length - 1 ) {
+            if (head == que.length - 1) {
                 head = 0;
             } else {
                 head++;
@@ -113,7 +109,7 @@ public class Graph {
             return x;
         }
 
-        boolean isEmpty(){
+        boolean isEmpty() {
             return head == tail;
 
         }
