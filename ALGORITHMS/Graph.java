@@ -1,5 +1,7 @@
 public class Graph {
-
+    final int WHITE = 1;
+    final int GRAY = 2;
+    final int NIL = -1;
 
     int[][] adj;    // adjacency matrix
     int[] d;        // distance array, distance from source to vertex u
@@ -31,6 +33,37 @@ public class Graph {
     // breadth-first search from s. results in d[], pi[]
 
     public void bfs(int s) {
+        Que Q = new Que(adj.length);
+        f = new int[adj.length];
+        d = new int[adj.length];
+        pi = new int[adj.length];
+
+        for( int i = 0; i < adj.length; i++) {
+            f[i] = WHITE;
+            d[i] = Integer.MAX_VALUE;
+            pi[i] = NIL;
+        }
+
+        f[s] = GRAY;
+        d[s] = 0;
+        pi[s] = NIL;
+
+        Q.enqueue(s);
+        while(!Q.isEmpty()) {
+            int vertex = Q.dequeue();
+            for ( int edge = 0; edge < adj.length; edge++) {
+                // scan down the adjacency matrix and add connected vertexes to the que.
+
+
+
+                if (adj[s] == 0) {
+                }
+                // for each vertex search its edges and change its color to GRAY if its color is WHITE
+
+            }
+
+    }
+
     }
 
     // depth-first search. results in d[], f[], pi[]
@@ -68,6 +101,10 @@ public class Graph {
             return x;
         }
 
+        boolean isEmpty(){
+            return head == tail;
+
+        }
     }
 
 
