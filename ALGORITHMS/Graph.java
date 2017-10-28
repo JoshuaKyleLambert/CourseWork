@@ -31,7 +31,11 @@ public class Graph {
 
     // a test program
     public static void main(String[] args) {
-        int[][] a = {{0, 0, 1, 1, 0}, {0, 0, 1, 0, 1}, {1, 1, 0, 1, 0}, {1, 0, 1, 0, 0}, {0, 1, 0, 0, 0}};
+        int[][] a = {{0, 0, 1, 1, 0},
+                    {0, 0, 1, 0, 1},
+                    {1, 1, 0, 1, 0},
+                    {1, 0, 1, 0, 0},
+                    {0, 1, 0, 0, 0}};
         Graph g = new Graph(a);
         g.bfs(3);
         for (int i = 0; i < g.d.length; i++) {
@@ -75,8 +79,10 @@ public class Graph {
         while (!Q.isEmpty()) {
             int vertex = Q.dequeue();
             for (int edge = 0; edge < adj.length; edge++) {
-                // scan down the adjacency matrix and add connected vertexes to the que.
-                // for each vertex search its edges and change its color to GRAY if its color is WHITE
+                // scan down the adjacency matrix and add
+                // connected vertexes to the que.
+                // for each vertex search its edges and
+                // change its color to GRAY if its color is WHITE
 
                 if (adj[vertex][edge] == 1)
                     if (f[edge] == WHITE) {
