@@ -1,26 +1,33 @@
+/*
+
+Joshua Lambert
+10/28/2017
+
+Graph Class with
+Breadth first Search
+Depth First Search
+and supporting FIFO Que
+
+
+ */
+
+
 public class Graph {
-    final int WHITE = 1;
-    final int GRAY = 2;
-    final int BLACK = 3;
-    final int NIL = -1;
+    private final int WHITE = 1;
+    private final int GRAY = 2;
+    private final int BLACK = 3;
+    private final int NIL = -1;
 
 
     int[][] adj;    // adjacency matrix
     int[] d;        // distance array, distance from source to vertex u  BFS
-    // time in the case of DFS
+                    // time in the case of DFS
     int[] f;        // Color attribute
     int[] pi;       // Previous Vertex
-    int time;       // time attributefor DFS visit
+    private int time;       // time attribute for DFS visit
 
-    Que Q;
+    private Que Q;          // FIFO Que object for BFS
 
-    public Graph(int[][] a) {
-        adj = a;
-        Q = new Que(a.length);
-        f = new int[a.length];
-        d = new int[a.length];
-        pi = new int[a.length];
-    }
 
     // a test program
     public static void main(String[] args) {
@@ -42,9 +49,18 @@ public class Graph {
     // construct an graph with the adjacency matrix public Graph(int[][] adj)
     // breadth-first search from s. results in d[], pi[]
 
+
+    public Graph(int[][] a) {
+        adj = a;
+        Q = new Que(a.length);
+        f = new int[a.length];
+        d = new int[a.length];
+        pi = new int[a.length];
+    }
+
+
     public void bfs(int s) {
-
-
+        // Initialize
         for (int i = 0; i < adj.length; i++) {
             f[i] = WHITE;
             d[i] = Integer.MAX_VALUE;
