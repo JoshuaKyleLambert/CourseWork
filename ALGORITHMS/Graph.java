@@ -1,7 +1,10 @@
 public class Graph {
     final int WHITE = 1;
     final int GRAY = 2;
+    final int BLACK = 3;
     final int NIL = -1;
+
+
 
     int[][] adj;    // adjacency matrix
     int[] d;        // distance array, distance from source to vertex u
@@ -53,10 +56,19 @@ public class Graph {
             int vertex = Q.dequeue();
             for ( int edge = 0; edge < adj.length; edge++) {
                 // scan down the adjacency matrix and add connected vertexes to the que.
+                if ( f[edge] == WHITE){
+                    f[edge] = GRAY;
+                    d[edge] = d[vertex] + 1;
+                    pi[edge] = vertex;
+                    Q.enqueue(edge);
 
+                }
+                f[vertex] = BLACK;
 
 
                 if (adj[s] == 0) {
+
+
                 }
                 // for each vertex search its edges and change its color to GRAY if its color is WHITE
 
