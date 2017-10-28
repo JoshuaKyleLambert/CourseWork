@@ -6,9 +6,13 @@ public class Graph {
 
 
     int[][] adj;    // adjacency matrix
-    int[] d;        // distance array, distance from source to vertex u
+    int[] d;        // distance array, distance from source to vertex u  BFS
+                    // time in the case of DFS
     int[] f;        // Color attribute
     int[] pi;       // Previous Vertex
+    int time;       // time attributefor DFS visit
+
+
 
     public Graph(int[][] a) {
         adj = a;
@@ -56,6 +60,8 @@ public class Graph {
             int vertex = Q.dequeue();
             for (int edge = 0; edge < adj.length; edge++) {
                 // scan down the adjacency matrix and add connected vertexes to the que.
+                // for each vertex search its edges and change its color to GRAY if its color is WHITE
+
                 if(adj[vertex][edge] == 1)
                 if (f[edge] == WHITE) {
                     f[edge] = GRAY;
@@ -67,7 +73,6 @@ public class Graph {
                 f[vertex] = BLACK;
 
             }
-            // for each vertex search its edges and change its color to GRAY if its color is WHITE
 
         }
 
@@ -76,6 +81,35 @@ public class Graph {
 
     // depth-first search. results in d[], f[], pi[]
     public void dfs() {
+        for ( int vertex = 0;  vertex < adj.length; vertex++){
+            f[vertex] = WHITE;
+            pi[vertex] = NIL;
+        }
+        time = 0;
+        for (int vertex = 0; vertex < adj.length; vertex++){
+            if( f[vertex] == WHITE)
+                dfsVisit(vertex);
+        }
+    }
+
+    private void dfsVisit(int vertex) {
+        time++;
+        d[vertex] = time;
+        f[vertex] = GRAY;
+
+        for(int edge = 0; edge < adj.length; edge++){
+            if ( adj[vertex][edge] == 1){
+                if( f[edge] == WHITE){
+                    pi[edge] = vertex;
+                    dfsVisit(edge);
+                }
+            }
+        }
+
+        f[vertex] = BLACK;
+        time++;
+        f[vertex] = time;
+
     }
 
     // FIFO Que
