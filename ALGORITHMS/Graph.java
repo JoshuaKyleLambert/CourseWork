@@ -7,15 +7,19 @@ public class Graph {
 
     int[][] adj;    // adjacency matrix
     int[] d;        // distance array, distance from source to vertex u  BFS
-                    // time in the case of DFS
+    // time in the case of DFS
     int[] f;        // Color attribute
     int[] pi;       // Previous Vertex
     int time;       // time attributefor DFS visit
 
-
+    Que Q;
 
     public Graph(int[][] a) {
         adj = a;
+        Q = new Que(a.length);
+        f = new int[a.length];
+        d = new int[a.length];
+        pi = new int[a.length];
     }
 
     // a test program
@@ -35,15 +39,11 @@ public class Graph {
     }
 
 
-
     // construct an graph with the adjacency matrix public Graph(int[][] adj)
     // breadth-first search from s. results in d[], pi[]
 
     public void bfs(int s) {
-        Que Q = new Que(adj.length);
-        f = new int[adj.length];
-        d = new int[adj.length];
-        pi = new int[adj.length];
+
 
         for (int i = 0; i < adj.length; i++) {
             f[i] = WHITE;
@@ -62,14 +62,14 @@ public class Graph {
                 // scan down the adjacency matrix and add connected vertexes to the que.
                 // for each vertex search its edges and change its color to GRAY if its color is WHITE
 
-                if(adj[vertex][edge] == 1)
-                if (f[edge] == WHITE) {
-                    f[edge] = GRAY;
-                    d[edge] = d[vertex] + 1;
-                    pi[edge] = vertex;
-                    Q.enqueue(edge);
+                if (adj[vertex][edge] == 1)
+                    if (f[edge] == WHITE) {
+                        f[edge] = GRAY;
+                        d[edge] = d[vertex] + 1;
+                        pi[edge] = vertex;
+                        Q.enqueue(edge);
 
-                }
+                    }
                 f[vertex] = BLACK;
 
             }
@@ -81,13 +81,13 @@ public class Graph {
 
     // depth-first search. results in d[], f[], pi[]
     public void dfs() {
-        for ( int vertex = 0;  vertex < adj.length; vertex++){
+        for (int vertex = 0; vertex < adj.length; vertex++) {
             f[vertex] = WHITE;
             pi[vertex] = NIL;
         }
         time = 0;
-        for (int vertex = 0; vertex < adj.length; vertex++){
-            if( f[vertex] == WHITE)
+        for (int vertex = 0; vertex < adj.length; vertex++) {
+            if (f[vertex] == WHITE)
                 dfsVisit(vertex);
         }
     }
@@ -97,9 +97,9 @@ public class Graph {
         d[vertex] = time;
         f[vertex] = GRAY;
 
-        for(int edge = 0; edge < adj.length; edge++){
-            if ( adj[vertex][edge] == 1){
-                if( f[edge] == WHITE){
+        for (int edge = 0; edge < adj.length; edge++) {
+            if (adj[vertex][edge] == 1) {
+                if (f[edge] == WHITE) {
                     pi[edge] = vertex;
                     dfsVisit(edge);
                 }
