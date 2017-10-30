@@ -20,9 +20,10 @@ public class Graph {
 
 
     int[][] adj;    // adjacency matrix
-    int[] d;        // distance array, distance from source to vertex u  BFS
+    int[] d;        //  attribute d
                     // time in the case of DFS
-    int[] f;        // Color attribute
+    int[] f;        //  attribute f
+    int[] color;    // Color Attribute
     int[] pi;       // Previous Vertex
     private int time;       // time attribute for DFS visit
 
@@ -60,6 +61,7 @@ public class Graph {
         f = new int[a.length];
         d = new int[a.length];
         pi = new int[a.length];
+        color = new int[a.length];
     }
 
 
@@ -104,12 +106,12 @@ public class Graph {
     // depth-first search. results in d[], f[], pi[]
     public void dfs() {
         for (int vertex = 0; vertex < adj.length; vertex++) {
-            f[vertex] = WHITE;
+            color[vertex] = WHITE;
             pi[vertex] = NIL;
         }
         time = 0;
         for (int vertex = 0; vertex < adj.length; vertex++) {
-            if (f[vertex] == WHITE)
+            if (color[vertex] == WHITE)
                 dfsVisit(vertex);
         }
     }
@@ -117,18 +119,18 @@ public class Graph {
     private void dfsVisit(int vertex) {
         time++;
         d[vertex] = time;
-        f[vertex] = GRAY;
+        color[vertex] = GRAY;
 
         for (int edge = 0; edge < adj.length; edge++) {
             if (adj[vertex][edge] == 1) {
-                if (f[edge] == WHITE) {
+                if (color[edge] == WHITE) {
                     pi[edge] = vertex;
                     dfsVisit(edge);
                 }
             }
         }
 
-        f[vertex] = BLACK;
+        color[vertex] = BLACK;
         time++;
         f[vertex] = time;
 
