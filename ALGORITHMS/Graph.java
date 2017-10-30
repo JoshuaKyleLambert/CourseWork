@@ -23,11 +23,11 @@ public class Graph {
     int[] d;        //  attribute d
                     // time in the case of DFS
     int[] f;        //  attribute f
-    int[] color;    // Color Attribute
+    //int[] color;    // Color Attribute
     int[] pi;       // Previous Vertex
     private int time;       // time attribute for DFS visit
 
-    private Que Q;          // FIFO Que object for BFS
+
 
 
     // a test program
@@ -57,16 +57,17 @@ public class Graph {
 
     public Graph(int[][] a) {
         adj = a;
-        Q = new Que(a.length);
+        //Q = new Que(a.length);
         f = new int[a.length];
         d = new int[a.length];
         pi = new int[a.length];
-        color = new int[a.length];
+       // color = new int[a.length];
     }
 
 
     public void bfs(int s) {
         // Initialize
+        Que Q = new Que(adj.length);          // FIFO Que object for BFS
         for (int i = 0; i < adj.length; i++) {
             f[i] = WHITE;
             d[i] = Integer.MAX_VALUE;
@@ -105,6 +106,9 @@ public class Graph {
 
     // depth-first search. results in d[], f[], pi[]
     public void dfs() {
+        int[] color;    // Color Attribute
+        color = new int[adj.length];
+
         for (int vertex = 0; vertex < adj.length; vertex++) {
             color[vertex] = WHITE;
             pi[vertex] = NIL;
@@ -112,11 +116,11 @@ public class Graph {
         time = 0;
         for (int vertex = 0; vertex < adj.length; vertex++) {
             if (color[vertex] == WHITE)
-                dfsVisit(vertex);
+                dfsVisit(vertex, color);
         }
     }
 
-    private void dfsVisit(int vertex) {
+    private void dfsVisit(int vertex, int[] color) {
         time++;
         d[vertex] = time;
         color[vertex] = GRAY;
@@ -125,7 +129,7 @@ public class Graph {
             if (adj[vertex][edge] == 1) {
                 if (color[edge] == WHITE) {
                     pi[edge] = vertex;
-                    dfsVisit(edge);
+                    dfsVisit(edge, color);
                 }
             }
         }
