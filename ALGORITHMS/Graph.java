@@ -26,8 +26,6 @@ public class Graph {
     int time;       // time attribute for DFS visit
 
 
-
-
     // a test program
     public static void main(String[] args) {
         int[][] a = {{0, 0, 1, 1, 0},
@@ -58,7 +56,6 @@ public class Graph {
         f = new int[a.length];
         d = new int[a.length];
         pi = new int[a.length];
-
     }
 
 
@@ -85,14 +82,10 @@ public class Graph {
                         d[edge] = d[vertex] + 1;
                         pi[edge] = vertex;
                         Q.enqueue(edge);
-
                     }
                 f[vertex] = BLACK;
-
             }
-
         }
-
     }
 
 
@@ -129,7 +122,6 @@ public class Graph {
         color[vertex] = BLACK;
         time++;
         f[vertex] = time;
-
     }
 
     // FIFO Que
@@ -150,7 +142,6 @@ public class Graph {
             } else {
                 tail++;
             }
-
         }
 
         int dequeue() {
@@ -160,15 +151,11 @@ public class Graph {
             } else {
                 head++;
             }
-
             return x;
         }
 
         boolean isEmpty() {
             return head == tail;
-
         }
     }
-
-
 }
