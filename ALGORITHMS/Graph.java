@@ -20,12 +20,10 @@ public class Graph {
 
 
     int[][] adj;    // adjacency matrix
-    int[] d;        //  attribute d
-                    // time in the case of DFS
-    int[] f;        //  attribute f
-    //int[] color;    // Color Attribute
+    int[] d;        // attribute d
+    int[] f;        // attribute f
     int[] pi;       // Previous Vertex
-    private int time;       // time attribute for DFS visit
+    int time;       // time attribute for DFS visit
 
 
 
@@ -57,11 +55,10 @@ public class Graph {
 
     public Graph(int[][] a) {
         adj = a;
-        //Q = new Que(a.length);
         f = new int[a.length];
         d = new int[a.length];
         pi = new int[a.length];
-       // color = new int[a.length];
+
     }
 
 
@@ -82,11 +79,6 @@ public class Graph {
         while (!Q.isEmpty()) {
             int vertex = Q.dequeue();
             for (int edge = 0; edge < adj.length; edge++) {
-                // scan down the adjacency matrix and add
-                // connected vertexes to the que.
-                // for each vertex search its edges and
-                // change its color to GRAY if its color is WHITE
-
                 if (adj[vertex][edge] == 1)
                     if (f[edge] == WHITE) {
                         f[edge] = GRAY;
