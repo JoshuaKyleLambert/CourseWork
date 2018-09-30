@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Joshua/CLionProjects/FenceHillValley/main.cpp
+iostream
+-
+pthread.h
+-
+fstream
+-
+stdio.h
+-
+stdlib.h
+-
+unistd.h
+-
+string.h
+-
+vector
+-
+
