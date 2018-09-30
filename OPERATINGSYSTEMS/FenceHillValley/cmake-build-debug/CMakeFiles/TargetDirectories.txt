@@ -1,3 +1,3 @@
-C:/Users/Joshua/CLionProjects/FenceHillValley/cmake-build-debug/CMakeFiles/FenceHillValley.dir
-C:/Users/Joshua/CLionProjects/FenceHillValley/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Joshua/CLionProjects/FenceHillValley/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/Joshua/Documents/CourseWork/OPERATINGSYSTEMS/FenceHillValley/cmake-build-debug/CMakeFiles/FenceHillValley.dir
+C:/Users/Joshua/Documents/CourseWork/OPERATINGSYSTEMS/FenceHillValley/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Joshua/Documents/CourseWork/OPERATINGSYSTEMS/FenceHillValley/cmake-build-debug/CMakeFiles/rebuild_cache.dir
