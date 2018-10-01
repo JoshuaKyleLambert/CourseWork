@@ -61,7 +61,12 @@ void *sifterT(void *in) {
 
     if (message == "exit") return 0;
 
-    for (int i = 0; i < 2 && message != "exit"; i++) {
+    for (int i = 0;  message != "exit"; i++) {
+        string message = "***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
+        part1.clear();
+        part2.clear();
+        part3.clear();
+
         if (inputValidator(message)) {
 
             //make decoder thread here
@@ -79,7 +84,7 @@ void *sifterT(void *in) {
                 cout << "Error joining decoder thread";
                 return 0;
             }
-            break;
+            //break;
         } else {
             cout << "invalid input, you may try to input " << 2 - i << " more times: " << endl;
             cout << "-->";
