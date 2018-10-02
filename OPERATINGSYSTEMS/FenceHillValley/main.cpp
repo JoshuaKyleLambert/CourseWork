@@ -8,97 +8,77 @@
 #include <vector>
 
 using namespace std;
-
 void *sifterT(void *);
-
 void *decoderT(void *);
-
 void *fenceT(void *);
-
 void *hillT(void *);
-
-void *pinnacleT(void *);
-
-bool isValidInput(string input);
-
+void *valleyT(void *);
 bool inputValidator(string message);
 
 string part1, part2, part3;
 
 int main() {
-   // string input = "*j098dlkdjfjlkjdsf*kmakmkdkajf0i3098ud*sajnfflkjdsa0lksdajkjfw";
     pthread_t sifter;
-
-    //Ask user for input
     string input;
-    //cout << "Enter your message: " << endl;
-    //getline(cin, input);
-   // if (input == "exit") return 0;
-
     //Sifter thread
     if (pthread_create(&sifter, NULL, sifterT, &input)) {
         cout << "Error creating sifter thread";
         return 0;
     }
-
     if (pthread_join(sifter, NULL)) {
         cout << "Error joining sifter thread";
         return 0;
     }
-
     return 0;
 }
 
 //Sifter Thread
 void *sifterT(void *in) {
     string *input = (string *) (in);
-
-    //string message;
-    string message = "***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
-
-    cout << "Enter your message: " << endl;
-   // getline(cin, message);
-
-    if (message == "exit") return 0;
-
-    for (int i = 0;  message != "exit"; i++) {
-        string message = "***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
+    string message  ;//"***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
+    string tries;
+    for (int i = 0; i <= 2 && message != "exit"; i++) {
+        //string message = "***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
+        cout << "Enter your message: " << endl;
+        getline(cin, message);
+        if (message == "exit") return EXIT_SUCCESS;
         part1.clear();
         part2.clear();
         part3.clear();
 
         if (inputValidator(message)) {
-
             //make decoder thread here
             cout << "Valid input received, starting Decoder thread." << endl;
             pthread_t decoder;
 
-            if (pthread_create(&decoder, nullptr, decoderT, &message))
-            {
+            if (pthread_create(&decoder, nullptr, decoderT, &message)){
                 cout << "Error creating decoder thread";
                 return 0;
             }
 
-            if (pthread_join(decoder, nullptr))
-            {
+            if (pthread_join(decoder, nullptr)){
                 cout << "Error joining decoder thread";
                 return 0;
             }
             //break;
         } else {
-            cout << "invalid input, you may try to input " << 2 - i << " more times: " << endl;
-            cout << "-->";
+            if(i == 0) tries = "twice";
+            if(i == 1){
+                cout << "This is your last chance to enter a correct message: " << endl << "-->";
+            }
+            else {
+                cout << "Invalid input, you may try " << tries << " again: " << endl;
+                cout << "-->";
+            }
             message.clear();
-            getline(cin, message);
+            //getline(cin, message);
         }
     }
+    return EXIT_SUCCESS;
 }
 
 bool inputValidator(string message) {
-    // cout << message << endl;
     bool valid = true;
-    //string part1, part2, part3;
-    //string parts[3];
     bool grabbed1 = false, grabbed2 = false, grabbed3 = false;
 
     int i = 0;
@@ -108,7 +88,6 @@ bool inputValidator(string message) {
         if (message[i] == '*') asterCount = 1;
         if (message[i + 1] == '*') asterCount = 2;
         if (message[i + 2] == '*') asterCount = 3;
-
 
         switch (asterCount) {
             case 0 :
@@ -120,7 +99,6 @@ bool inputValidator(string message) {
                 i++;
                 for (int j = i; message[j] != '*' && i <= message.size() - 1 && !grabbed1; j++, i++) {
                     part1 = part1 + message[j];
-                    //cout << i << endl;
                 }
                 if (grabbed1) valid = false;
                 grabbed1 = true;
@@ -142,42 +120,33 @@ bool inputValidator(string message) {
                 grabbed3 = true;
                 break;
         }
-
     }
-
-   // parts[0] = part1;
-    //parts[1] = part2;
-   // parts[2] = part3;
-
     cout << "Section 1: " << part1 << endl << "Section 2: " << part2 << endl << "Section 3: " << part3 << endl;
 
-    if (valid && grabbed1 && grabbed2 & grabbed3) return true;
+    if (valid && grabbed1 && grabbed2 && grabbed3) return true;
     else return false;
 }
 
 //Decoder Thread
 void *decoderT(void *in) {
         pthread_t fence, hill, pinnacle;
-
         if (pthread_create(&fence, NULL, fenceT, &part1)) {
             cout << "Error creating Fence thread";
             return 0;
         }
-
         if (pthread_join(fence, NULL)) {
             cout << "Error joining Fence thread";
             return 0;
         }
+        if (pthread_create(&hill, NULL, hillT, &part2)) {
+            cout << "Error creating Hill thread";
+            return 0;
+        }
 
-//        if (pthread_create(&hill, NULL, hillT, &part2)) {
-//            cout << "Error creating Hill thread";
-//            return 0;
-//        }
-//
-//        if (pthread_join(hill, NULL)) {
-//            cout << "Error joining Hill thread";
-//            return 0;
-//        }
+        if (pthread_join(hill, NULL)) {
+            cout << "Error joining Hill thread";
+            return 0;
+        }
 //
 //        if (pthread_create(&pinnacle, NULL, pinnacleT, &part3)) {
 //            cout << "Error creating Pinnacle thread";
@@ -188,13 +157,13 @@ void *decoderT(void *in) {
 //            cout << "Error joining Pinnacle thread";
 //            return 0;
 //        }
+    return EXIT_SUCCESS;
 }
 
 //Algorithm #1: Rail Fence algorithm
 void *fenceT(void *in) {
     string *input = (string *) (in);
     string message = *input;
-
     string section1, section2, Key;
     int i = 0;
     //find repeated occurrence of numerical chars only
@@ -221,19 +190,12 @@ void *fenceT(void *in) {
     }
 
     //now find repeated numerical char positions
-    int numeric;
     bool fencenotfound = true;
-    bool fencenotfound2 = true;
     for(int q = 0; q < section1.size() && fencenotfound; q++){
-        numeric = section1[q];
         for(int p = q + 2; p < section1.size() & fencenotfound; p++){
             if (section1[q] == section1[p]){
-                if(p - q != 1){
-                    fencenotfound2 = false;
-                }
                 for(int k = 0; k <= p - 1 ; k++)
                     Key = Key + section1[k];
-               // p = q = section1.size();
                 fencenotfound = false;
             }
         }
@@ -244,14 +206,10 @@ void *fenceT(void *in) {
     //Pulls out characters up to p-1
     for(int q = 1, p = 0; q < Key.size() ; q++, p++ ){
         if(Key[q] == Key[p]){
-            fencenotfound2 = false;
             for(int j = 0; j < p; j++) Keyb = Keyb + Key[j];
-       }
-
+        }
     }
-
     cout << section1 << endl << section2 << endl << Key << endl << Keyb << endl;
-
 
     // If q = p + 1 we'll use this instead
     if(Keyb.size() > 0){
@@ -262,9 +220,6 @@ void *fenceT(void *in) {
     }
 
     cout << Key << " key here" << endl;
-
-    //cout << section1 << endl << section2 << endl << Key << endl << Keyb << endl;
-
 
     // Check the validity  of the key using gauss's formula
     int correctSum = (Key.size() * ( Key.size() + 1))/2;
@@ -291,12 +246,13 @@ void *fenceT(void *in) {
                 cout << section2[element] ;
             }
         }
+        cout << endl;
     }
     else {
      cout << " Invalid Message length. Exiting... " << endl;
     }
-
-
+    return EXIT_SUCCESS;
+    //pthread_exit((void *) "finished fence");
 }
 
 //Algorithm #2: Hill Algorithm
@@ -366,10 +322,11 @@ void *hillT(void *in) {
             cout << "Hill Thread result is " << hill << endl;
         }
     }
+return EXIT_SUCCESS;
 }
 
-//Algorithm #3: Pinnacle Algorithm
-void *pinnacleT(void *in) {
+//Algorithm #3: Valley Algorithm
+void *valleyT(void *in) {
     string *input = (string *) (in);
     string message = *input;
 
@@ -443,4 +400,5 @@ void *pinnacleT(void *in) {
             cout << "Pinnacle Thread result is: " << pinnacle << endl;
         }
     }
+    return EXIT_SUCCESS;
 }
