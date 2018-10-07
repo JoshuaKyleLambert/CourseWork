@@ -6,13 +6,20 @@
 #include <unistd.h>
 #include <string.h>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
+
 void *sifterT(void *);
+
 void *decoderT(void *);
+
 void *fenceT(void *);
+
 void *hillT(void *);
+
 void *valleyT(void *);
+
 bool inputValidator(string message);
 
 string part1, part2, part3;
@@ -35,9 +42,9 @@ int main() {
 //Sifter Thread
 void *sifterT(void *in) {
     string *input = (string *) (in);
-    string message  ;//"***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
+    string message;//"***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
     string tries;
-    for (int i = 0; i <= 2 && message != "exit"; i++) {
+    for (int i = 0; i <= 3 && message != "exit"; i++) {
         //string message = "***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
         cout << "Enter your message: " << endl;
         getline(cin, message);
@@ -48,25 +55,26 @@ void *sifterT(void *in) {
 
         if (inputValidator(message)) {
             //make decoder thread here
+            //reset counter on valid input
+            i = 0;
             cout << "Valid input received, starting Decoder thread." << endl;
             pthread_t decoder;
 
-            if (pthread_create(&decoder, nullptr, decoderT, &message)){
+            if (pthread_create(&decoder, nullptr, decoderT, &message)) {
                 cout << "Error creating decoder thread";
                 return 0;
             }
 
-            if (pthread_join(decoder, nullptr)){
+            if (pthread_join(decoder, nullptr)) {
                 cout << "Error joining decoder thread";
                 return 0;
             }
             //break;
         } else {
-            if(i == 0) tries = "twice";
-            if(i == 1){
+            if (i == 0) tries = "twice";
+            if (i == 1) {
                 cout << "This is your last chance to enter a correct message: " << endl << "-->";
-            }
-            else {
+            } else {
                 cout << "Invalid input, you may try " << tries << " again: " << endl;
                 cout << "-->";
             }
@@ -129,24 +137,25 @@ bool inputValidator(string message) {
 
 //Decoder Thread
 void *decoderT(void *in) {
-        pthread_t fence, hill, pinnacle;
-        if (pthread_create(&fence, NULL, fenceT, &part1)) {
-            cout << "Error creating Fence thread";
-            return 0;
-        }
-        if (pthread_join(fence, NULL)) {
-            cout << "Error joining Fence thread";
-            return 0;
-        }
-        if (pthread_create(&hill, NULL, hillT, &part2)) {
-            cout << "Error creating Hill thread";
-            return 0;
-        }
+    void *threadPointer;
+    pthread_t fence, hill;
+    if (pthread_create(&fence, NULL, fenceT, &part1)) {
+        cout << "Error creating Fence thread";
+        return 0;
+    }
+    if (pthread_join(fence, NULL)) {
+        cout << "Error joining Fence thread";
+        return 0;
+    }
+    if (pthread_create(&hill, NULL, hillT, &part2)) {
+        cout << "Error creating Hill thread";
+        return 0;
+    }
 
-        if (pthread_join(hill, NULL)) {
-            cout << "Error joining Hill thread";
-            return 0;
-        }
+    if (pthread_join(hill, &threadPointer)) {
+        cout << "Error joining Hill thread" << threadPointer;
+        return 0;
+    }
 //
 //        if (pthread_create(&pinnacle, NULL, pinnacleT, &part3)) {
 //            cout << "Error creating Pinnacle thread";
@@ -171,30 +180,30 @@ void *fenceT(void *in) {
 
     //first find length of section 1
 
-    while(message[i] == ' ')i++; //ignore leading whitespace
+    while (message[i] == ' ')i++; //ignore leading whitespace
     //Check for numbers using the ascii codes.
     //grab the leading numbers
-    while(message[i] >= 48 && message[i] <= 57) {
+    while (message[i] >= 48 && message[i] <= 57) {
         section1 = section1 + message[i];
         i++;
     }
 
     // We didn't find any numbers at the beginning
-    if(section1.size() == 0)
-    return 0;
+    if (section1.size() == 0)
+        return 0;
 
     // Gather the rest of the characters
-    while(i < message.size() ){
+    while (i < message.size()) {
         section2 = section2 + message[i];
         i++;
     }
 
     //now find repeated numerical char positions
     bool fencenotfound = true;
-    for(int q = 0; q < section1.size() && fencenotfound; q++){
-        for(int p = q + 2; p < section1.size() & fencenotfound; p++){
-            if (section1[q] == section1[p]){
-                for(int k = 0; k <= p - 1 ; k++)
+    for (int q = 0; q < section1.size() && fencenotfound; q++) {
+        for (int p = q + 2; p < section1.size() & fencenotfound; p++) {
+            if (section1[q] == section1[p]) {
+                for (int k = 0; k <= p - 1; k++)
                     Key = Key + section1[k];
                 fencenotfound = false;
             }
@@ -204,52 +213,56 @@ void *fenceT(void *in) {
     string Keyb;
 
     //Pulls out characters up to p-1
-    for(int q = 1, p = 0; q < Key.size() ; q++, p++ ){
-        if(Key[q] == Key[p]){
-            for(int j = 0; j < p; j++) Keyb = Keyb + Key[j];
+    for (int q = 1, p = 0; q < Key.size(); q++, p++) {
+        if (Key[q] == Key[p]) {
+            for (int j = 0; j < p; j++) Keyb = Keyb + Key[j];
         }
     }
     cout << section1 << endl << section2 << endl << Key << endl << Keyb << endl;
 
     // If q = p + 1 we'll use this instead
-    if(Keyb.size() > 0){
+    if (Keyb.size() > 0) {
         Key.clear();
-       for(int i = 0; i < Keyb.size(); i++){
+        for (int i = 0; i < Keyb.size(); i++) {
             Key = Key + Keyb[i];
-       }
+        }
     }
 
     cout << Key << " key here" << endl;
 
     // Check the validity  of the key using gauss's formula
-    int correctSum = (Key.size() * ( Key.size() + 1))/2;
+    int correctSum = (Key.size() * (Key.size() + 1)) / 2;
     int keySum = 0;
-    for(int i = 0; i < Key.size(); i++)     keySum = keySum + (Key[i] - 48);
+    for (int i = 0; i < Key.size(); i++) keySum = keySum + (Key[i] - 48);
 
-    if( keySum != correctSum) {
+    if (keySum != correctSum) {
         cout << "Invalid Key sum." << endl;
         return 0;
-    }
-    else
+    } else
         cout << "Correct Key sum." << endl;
 
     int groupeSize;
     int element;
+    string decrypted;
     //Extract text from encrypted string using pointer arithmetic concept
     //No need for matrix.
-    if ( !(section2.size() % Key.size())){
+    if (!(section2.size() % Key.size())) {
         groupeSize = section2.size() / Key.size();
         cout << "Decrypted text: " << endl;
-        for(int i = 0; i < groupeSize; i++) {
+        for (int i = 0; i < groupeSize; i++) {
             for (int j = 0; j < Key.size(); j++) {
                 element = ((groupeSize) * (Key[j] - 48)) - groupeSize + i;
-                cout << section2[element] ;
+                decrypted += section2[element];
             }
         }
-        cout << endl;
-    }
-    else {
-     cout << " Invalid Message length. Exiting... " << endl;
+        //uppercase for output
+        for(int i = 0; i < decrypted.length(); i++){
+            decrypted[i] = toupper(decrypted[i]);
+        }
+        cout << "--------------Fence-----------------" << endl;
+        cout << decrypted << endl;
+    } else {
+        cout << " Invalid Message length. Exiting... " << endl;
     }
     return EXIT_SUCCESS;
     //pthread_exit((void *) "finished fence");
@@ -259,70 +272,110 @@ void *fenceT(void *in) {
 void *hillT(void *in) {
     string *input = (string *) (in);
     string message = *input;
+    string returnVal;
+    string section2, section3;
+    int section1 = 0;
 
-    //Trim spaces at front if necessary
-    size_t firstChar = message.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    string trimmedMessage = message.substr(firstChar, message.length());
+    // Get message section1
+    int i = 0;
+    while (message[i] == ' ')i++;
+    if (message[i] == '3' || message[i] == '2')
+        section1 = message[i] - 48;
+    else {
+        returnVal = 1;
+        cout << "invalid section 1,  not 2 or 3" << endl;
+        pthread_exit(0);
+    }
 
-    //Find first number and split into section1
-    size_t firstNum = trimmedMessage.find_first_of("123456789");
-    string section1 = trimmedMessage.substr(0, firstNum - 1);
-
-    //Check if section1 is even length
-    if ((section1.length() % 2) != 0) {
-        cout << "Hill: Not an even length of characters." << endl;
-    } else {
-        size_t lastNum = trimmedMessage.find_last_of("0123456789");
-        //Trim white space at the end of section2
-        string section2 = trimmedMessage.substr(firstNum, lastNum - firstNum + 1);
-
-        //Tokenize and break up section2 and put into vector
-        vector<string> vsection2;
-        int i = 0;
-        string delim = " ";
-        size_t pos = section2.find(delim);
-        while (pos != string::npos) {
-            vsection2.push_back(section2.substr(i, pos - i));
-            i = ++pos;
-            pos = section2.find(delim, pos);
-
-            if (pos == string::npos) {
-                vsection2.push_back(section2.substr(i, section2.length()));
-            }
+    // Get message section 2 and 3
+    i++;
+    while (message[i] == ' ')i++;
+    for (int j = i; j < message.length(); j++) {
+        if (message[j] == ' ')
+            continue;
+        if (isalpha(message[j])) {
+            section2 += message[j];
         }
-
-        if (vsection2.size() != 4) {
-            cout << "Hill: The digit section does not contain 4 digits" << endl;
-        } else {
-            //Put string into array
-            char asection1[section1.length()];
-            strcpy(asection1, section1.c_str());
-
-            //Create a 2 index vector, loop and increment by 2 and convert/do matrix multiplication/reconvert
-            int section1_2[2];
-            string hill;
-            for (int x = 0; x < section1.length(); x = x + 2) {
-                if (isupper(asection1[x])) {
-                    section1_2[0] = asection1[x] - 65;
-                } else {
-                    section1_2[0] = asection1[x] - 97;
-                }
-                if (isupper(asection1[x + 1])) {
-                    section1_2[1] = asection1[x + 1] - 65;
-                } else {
-                    section1_2[1] = asection1[x + 1] - 97;
-                }
-
-                hill += (65 + (((atoi(vsection2.at(0).c_str()) * section1_2[0]
-                                 + atoi(vsection2.at(1).c_str()) * section1_2[1]) % 26 + 26) % 26));
-                hill += (65 + (((atoi(vsection2.at(2).c_str()) * section1_2[0]
-                                 + atoi(vsection2.at(3).c_str()) * section1_2[1]) % 26 + 26) % 26));
-            }
-
-            cout << "Hill Thread result is " << hill << endl;
+        if (isdigit(message[j])) {
+            section3 = message.substr(j, string::npos);
+            break;
         }
     }
-return EXIT_SUCCESS;
+
+    // Validating input
+    if (section1 == 2 && section2.length() % 2 != 0) {
+        cout << "section2 has wrong length. Should be multiplicative 2 " << endl;
+        pthread_exit(0);
+    }
+
+    if (section1 == 3 && section2.length() % 3 != 0) {
+        cout << "section2 has wrong length. Should be multiplicative 3 " << endl;
+        pthread_exit(0);
+    }
+
+    for (int k = 0; k < section3.length(); k++) {
+        if (section3[k] == ' ') continue;
+        if (!isdigit(section3[k])) {
+            cout << "invalid section3 contains non numerical chars. " << endl;
+            pthread_exit(0);
+        }
+    }
+
+    //convert to uppercase
+    for (int k = 0; k < section2.length(); k++)
+        section2[k] = toupper(section2[k]);
+
+    //Tokenize
+    int *tokens = new int[section3.length()];
+    char *cstr = new char[section3.length() + 1];
+
+    strcpy(cstr, section3.c_str());
+    char *toks = strtok(cstr, " ");
+    i = 0;
+    while (toks != 0) {
+        tokens[i] = atoi(toks);
+        //cout << tokens[i] << " ";
+        i++;
+        toks = strtok(NULL, " ");
+    }
+    delete[] cstr;
+
+    //Encrypt
+    string encrypted;
+
+    if(section1 == 3) {
+        for (int k = 0, m = 0; k < section2.length(); k += 3, m++) {
+
+            encrypted += (char) (((((section2[k]) - 65) * tokens[0] +
+                                   (section2[k + 1] - 65) * tokens[3] +
+                                   (section2[k + 2] - 65) * tokens[6]) % 26) + 65);
+
+            encrypted += (char) (((((section2[k]) - 65) * tokens[1] +
+                                   (section2[k + 1] - 65) * tokens[4] +
+                                   (section2[k + 2] - 65) * tokens[7]) % 26) + 65);
+
+            encrypted += (char) (((((section2[k]) - 65) * tokens[2] +
+                                   (section2[k + 1] - 65) * tokens[5] +
+                                   (section2[k + 2] - 65) * tokens[8]) % 26) + 65);
+
+        }
+    }
+
+    if(section1 == 2){
+        for (int k = 0, m = 0; k < section2.length(); k += 2, m++) {
+            encrypted += (char) (((((section2[k]) - 65) * tokens[0] +
+                                   (section2[k + 1] - 65) * tokens[2]) % 26) + 65);
+
+            encrypted += (char) (((((section2[k]) - 65) * tokens[1] +
+                                   (section2[k + 1] - 65) * tokens[3]) % 26) + 65);
+        }
+    }
+
+    cout << "--------------Hill------------------" << endl;
+    cout << encrypted << endl;
+
+    pthread_exit(0);
+    return EXIT_SUCCESS;
 }
 
 //Algorithm #3: Valley Algorithm
@@ -330,75 +383,6 @@ void *valleyT(void *in) {
     string *input = (string *) (in);
     string message = *input;
 
-    size_t firstChar = message.find_first_of("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    string trimmedMessage = message.substr(firstChar, message.length());
-
-    //Find first number and split into section1
-    size_t firstNum = trimmedMessage.find_first_of("123456789");
-    string section1 = trimmedMessage.substr(0, firstNum - 1);
-
-    //Check if section1 is divisible by 3
-    if (section1.length() % 3 != 0) {
-        cout << "Pinnacle: Character length is not divisible by 3." << endl;
-    } else {
-        size_t lastNum = trimmedMessage.find_last_of("0123456789");
-        //Trim white space at the end of section2
-        string section2 = trimmedMessage.substr(firstNum, lastNum - firstNum + 1);
-
-        //Tokenize and break up section2 and put into vector
-        vector<string> vsection2;
-        int i = 0;
-        string delim = " ";
-        size_t pos = section2.find(delim);
-        while (pos != string::npos) {
-            vsection2.push_back(section2.substr(i, pos - i));
-            i = ++pos;
-            pos = section2.find(delim, pos);
-
-            if (pos == string::npos) {
-                vsection2.push_back(section2.substr(i, section2.length()));
-            }
-        }
-
-        if (vsection2.size() != 9) {
-            cout << "Pinnacle: The digit section does not contain 9 digits." << endl;
-        } else {
-            //Put string into array
-            char asection1[section1.length()];
-            strcpy(asection1, section1.c_str());
-            int section1_2[3];
-            string pinnacle;
-
-            //Create a 3 index vector, loop and increment by 3 and convert/do matrix multiplication/reconvert
-            for (int x = 0; x < section1.length(); x = x + 3) {
-                if (isupper(asection1[x])) {
-                    section1_2[0] = asection1[x] - 65;
-                } else {
-                    section1_2[0] = asection1[x] - 97;
-                }
-                if (isupper(asection1[x + 1])) {
-                    section1_2[1] = asection1[x + 1] - 65;
-                } else {
-                    section1_2[1] = asection1[x + 1] - 97;
-                }
-                if (isupper(asection1[x + 2])) {
-                    section1_2[2] = asection1[x + 2] - 65;
-                } else {
-                    section1_2[2] = asection1[x + 2] - 97;
-                }
-
-                pinnacle += (65 + (((atoi(vsection2.at(0).c_str()) * section1_2[0] +
-                                     atoi(vsection2.at(1).c_str()) * section1_2[1]
-                                     + atoi(vsection2.at(2).c_str()) * section1_2[2]) % 26 + 26) % 26));
-                pinnacle += (65 + (((atoi(vsection2.at(3).c_str()) * section1_2[0] +
-                                     atoi(vsection2.at(4).c_str()) * section1_2[1]
-                                     + atoi(vsection2.at(5).c_str()) * section1_2[2]) % 26 + 26) % 26));
-                pinnacle += (65 + (((atoi(vsection2.at(6).c_str()) * section1_2[0] +
-                                     atoi(vsection2.at(7).c_str()) * section1_2[1]
-                                     + atoi(vsection2.at(8).c_str()) * section1_2[2]) % 26 + 26) % 26));
-            }
-            cout << "Pinnacle Thread result is: " << pinnacle << endl;
-        }
-    }
+    cout << "--------------Valley----------------" << endl;
     return EXIT_SUCCESS;
 }
