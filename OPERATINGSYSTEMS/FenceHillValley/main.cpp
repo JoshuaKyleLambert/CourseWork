@@ -10,6 +10,12 @@
 
 using namespace std;
 
+
+struct threePartmessage {
+    string section2, section3;
+    int section1;
+};
+
 void *sifterT(void *);
 
 void *decoderT(void *);
@@ -22,17 +28,27 @@ void *valleyT(void *);
 
 bool inputValidator(string message);
 
+int mod(int m, int n);
+
+int modInverse(int a, int m);
+
+threePartmessage messageCutter(string message);
+
+bool threePartMessageValidator(threePartmessage message);
+
+void tokenize(string m, int &toki);
+
 string part1, part2, part3;
 
 int main() {
     pthread_t sifter;
     string input;
     //Sifter thread
-    if (pthread_create(&sifter, NULL, sifterT, &input)) {
+    if (pthread_create(&sifter, nullptr, sifterT, &input)) {
         cout << "Error creating sifter thread";
         return 0;
     }
-    if (pthread_join(sifter, NULL)) {
+    if (pthread_join(sifter, nullptr)) {
         cout << "Error joining sifter thread";
         return 0;
     }
@@ -82,6 +98,8 @@ void *sifterT(void *in) {
             //getline(cin, message);
         }
     }
+
+    pthread_exit(0);
     return EXIT_SUCCESS;
 }
 
@@ -138,34 +156,36 @@ bool inputValidator(string message) {
 //Decoder Thread
 void *decoderT(void *in) {
     void *threadPointer;
-    pthread_t fence, hill;
-    if (pthread_create(&fence, NULL, fenceT, &part1)) {
+    pthread_t fence, hill, valley;
+    if (pthread_create(&fence, nullptr, fenceT, &part1)) {
         cout << "Error creating Fence thread";
         return 0;
     }
-    if (pthread_join(fence, NULL)) {
+    if (pthread_join(fence, nullptr)) {
         cout << "Error joining Fence thread";
         return 0;
     }
-    if (pthread_create(&hill, NULL, hillT, &part2)) {
+    if (pthread_create(&hill, nullptr, hillT, &part2)) {
         cout << "Error creating Hill thread";
         return 0;
     }
 
-    if (pthread_join(hill, &threadPointer)) {
+    if (pthread_join(hill, nullptr)) {
         cout << "Error joining Hill thread" << threadPointer;
         return 0;
     }
-//
-//        if (pthread_create(&pinnacle, NULL, pinnacleT, &part3)) {
-//            cout << "Error creating Pinnacle thread";
-//            return 0;
-//        }
-//
-//        if (pthread_join(pinnacle, NULL)) {
-//            cout << "Error joining Pinnacle thread";
-//            return 0;
-//        }
+
+        if (pthread_create(&valley, nullptr, valleyT, &part3)) {
+            cout << "Error creating Valley thread";
+            return 0;
+        }
+
+        if (pthread_join(valley, nullptr)) {
+            cout << "Error joining Valley thread";
+            return 0;
+        }
+
+        pthread_exit(0);
     return EXIT_SUCCESS;
 }
 
@@ -272,102 +292,111 @@ void *fenceT(void *in) {
 void *hillT(void *in) {
     string *input = (string *) (in);
     string message = *input;
-    string returnVal;
-    string section2, section3;
-    int section1 = 0;
+    //string returnVal;
+    //string section2, section3;
+    //int section1 = 0;
+int i = 0;
+    threePartmessage messagetxt;
 
-    // Get message section1
-    int i = 0;
-    while (message[i] == ' ')i++;
-    if (message[i] == '3' || message[i] == '2')
-        section1 = message[i] - 48;
-    else {
-        returnVal = 1;
-        cout << "invalid section 1,  not 2 or 3" << endl;
+    messagetxt = messageCutter(message);
+    if (!threePartMessageValidator(messagetxt)) {
         pthread_exit(0);
+        return EXIT_SUCCESS;
     }
 
-    // Get message section 2 and 3
-    i++;
-    while (message[i] == ' ')i++;
-    for (int j = i; j < message.length(); j++) {
-        if (message[j] == ' ')
-            continue;
-        if (isalpha(message[j])) {
-            section2 += message[j];
-        }
-        if (isdigit(message[j])) {
-            section3 = message.substr(j, string::npos);
-            break;
-        }
-    }
-
-    // Validating input
-    if (section1 == 2 && section2.length() % 2 != 0) {
-        cout << "section2 has wrong length. Should be multiplicative 2 " << endl;
-        pthread_exit(0);
-    }
-
-    if (section1 == 3 && section2.length() % 3 != 0) {
-        cout << "section2 has wrong length. Should be multiplicative 3 " << endl;
-        pthread_exit(0);
-    }
-
-    for (int k = 0; k < section3.length(); k++) {
-        if (section3[k] == ' ') continue;
-        if (!isdigit(section3[k])) {
-            cout << "invalid section3 contains non numerical chars. " << endl;
-            pthread_exit(0);
-        }
-    }
+    //    // Get message section1
+//    int i = 0;
+//    while (message[i] == ' ')i++;
+//    if (message[i] == '3' || message[i] == '2')
+//        section1 = message[i] - 48;
+//    else {
+//        returnVal = 1;
+//        cout << "invalid section 1,  not 2 or 3" << endl;
+//        pthread_exit(0);
+//    }
+//
+//    // Get message section 2 and 3
+//    i++;
+//    while (message[i] == ' ')i++;
+//    for (int j = i; j < message.length(); j++) {
+//        if (message[j] == ' ')
+//            continue;
+//        if (isalpha(message[j])) {
+//            section2 += message[j];
+//        }
+//        if (isdigit(message[j])) {
+//            section3 = message.substr(j, string::npos);
+//            break;
+//        }
+//    }
+//
+//    // Validating input
+//    if (section1 == 2 && section2.length() % 2 != 0) {
+//        cout << "section2 has wrong length. Should be multiplicative 2 " << endl;
+//        pthread_exit(0);
+//    }
+//
+//    if (section1 == 3 && section2.length() % 3 != 0) {
+//        cout << "section2 has wrong length. Should be multiplicative 3 " << endl;
+//        pthread_exit(0);
+//    }
+//
+//    for (int k = 0; k < section3.length(); k++) {
+//        if (section3[k] == ' ') continue;
+//        if (!isdigit(section3[k])) {
+//            cout << "invalid section3 contains non numerical chars. " << endl;
+//            pthread_exit(0);
+//        }
+//    }
 
     //convert to uppercase
-    for (int k = 0; k < section2.length(); k++)
-        section2[k] = toupper(section2[k]);
+    for (int k = 0; k < messagetxt.section2.length(); k++)
+        messagetxt.section2[k] = toupper(messagetxt.section2[k]);
 
     //Tokenize
-    int *tokens = new int[section3.length()];
-    char *cstr = new char[section3.length() + 1];
+    int *tokens = new int[messagetxt.section3.length()];
+    char *cstr = new char[messagetxt.section3.length() + 1];
 
-    strcpy(cstr, section3.c_str());
+    strcpy(cstr, messagetxt.section3.c_str());
     char *toks = strtok(cstr, " ");
     i = 0;
     while (toks != 0) {
         tokens[i] = atoi(toks);
         //cout << tokens[i] << " ";
         i++;
-        toks = strtok(NULL, " ");
+        toks = strtok(nullptr, " ");
     }
     delete[] cstr;
+
+
 
     //Encrypt
     string encrypted;
 
-    if(section1 == 3) {
-        for (int k = 0, m = 0; k < section2.length(); k += 3, m++) {
+    if(messagetxt.section1 == 3) {
+        for (int k = 0, m = 0; k < messagetxt.section2.length(); k += 3, m++) {
 
-            encrypted += (char) (((((section2[k]) - 65) * tokens[0] +
-                                   (section2[k + 1] - 65) * tokens[3] +
-                                   (section2[k + 2] - 65) * tokens[6]) % 26) + 65);
+            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[0] +
+                                   (messagetxt.section2[k + 1] - 65) * tokens[3] +
+                                   (messagetxt.section2[k + 2] - 65) * tokens[6]) % 26) + 65);
 
-            encrypted += (char) (((((section2[k]) - 65) * tokens[1] +
-                                   (section2[k + 1] - 65) * tokens[4] +
-                                   (section2[k + 2] - 65) * tokens[7]) % 26) + 65);
+            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[1] +
+                                   (messagetxt.section2[k + 1] - 65) * tokens[4] +
+                                   (messagetxt.section2[k + 2] - 65) * tokens[7]) % 26) + 65);
 
-            encrypted += (char) (((((section2[k]) - 65) * tokens[2] +
-                                   (section2[k + 1] - 65) * tokens[5] +
-                                   (section2[k + 2] - 65) * tokens[8]) % 26) + 65);
-
+            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[2] +
+                                   (messagetxt.section2[k + 1] - 65) * tokens[5] +
+                                   (messagetxt.section2[k + 2] - 65) * tokens[8]) % 26) + 65);
         }
     }
 
-    if(section1 == 2){
-        for (int k = 0, m = 0; k < section2.length(); k += 2, m++) {
-            encrypted += (char) (((((section2[k]) - 65) * tokens[0] +
-                                   (section2[k + 1] - 65) * tokens[2]) % 26) + 65);
+    if(messagetxt.section1 == 2){
+        for (int k = 0, m = 0; k < messagetxt.section2.length(); k += 2, m++) {
+            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[0] +
+                                   (messagetxt.section2[k + 1] - 65) * tokens[2]) % 26) + 65);
 
-            encrypted += (char) (((((section2[k]) - 65) * tokens[1] +
-                                   (section2[k + 1] - 65) * tokens[3]) % 26) + 65);
+            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[1] +
+                                   (messagetxt.section2[k + 1] - 65) * tokens[3]) % 26) + 65);
         }
     }
 
@@ -383,6 +412,108 @@ void *valleyT(void *in) {
     string *input = (string *) (in);
     string message = *input;
 
+    threePartmessage messagetxt_s;
+    messagetxt_s = messageCutter(message);
+    if(!threePartMessageValidator(messagetxt_s)) {
+        pthread_exit(0);
+        return EXIT_SUCCESS;
+    }
+
+    if(messagetxt_s.section1 == 2){
+        
+    }
+
     cout << "--------------Valley----------------" << endl;
+    cout << modInverse(23, 26);
+
     return EXIT_SUCCESS;
+}
+
+threePartmessage messageCutter(string message){
+    threePartmessage messageTxt_s;
+
+    int i = 0;
+    while (message[i] == ' ')i++;
+    if (message[i] == '3' || message[i] == '2')
+        messageTxt_s.section1 = message[i] - 48;
+    else {
+        cout << "invalid section 1,  not 2 or 3" << endl;
+        pthread_exit(0);
+    }
+
+    // Get message section 2 and 3
+    i++;
+    while (message[i] == ' ')i++;
+    for (int j = i; j < message.length(); j++) {
+        if (message[j] == ' ')
+            continue;
+        if (isalpha(message[j])) {
+            messageTxt_s.section2 += message[j];
+        }
+        if (isdigit(message[j])) {
+            messageTxt_s.section3 = message.substr(j, string::npos);
+            break;
+        }
+    }
+
+    return messageTxt_s;
+}
+
+bool threePartMessageValidator(threePartmessage message){
+    // Validating input
+    if (message.section1 == 2 && message.section2.length() % 2 != 0) {
+        cout << "section2 has wrong length. Should be multiplicative 2 " << endl;
+        return false;
+    }
+
+    if (message.section1 == 3 && message.section2.length() % 3 != 0) {
+        cout << "section2 has wrong length. Should be multiplicative 3 " << endl;
+        return false;
+    }
+
+    for (int k = 0; k < message.section3.length(); k++) {
+        if (message.section3[k] == ' ') continue;
+        if (!isdigit(message.section3[k])) {
+            cout << "invalid section3 contains non numerical chars. " << endl;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void tokenize(string m, int &toki){
+    //convert to uppercase
+    for (int k = 0; k < m.length(); k++)
+        m[k] = toupper(m[k]);
+
+    //Tokenize
+    int *tokens = new int[m.length()];
+    char *cstr = new char[m.length() + 1];
+
+    strcpy(cstr, m.c_str());
+    char *toks = strtok(cstr, " ");
+    int i = 0;
+    while (toks != 0) {
+        tokens[i] = atoi(toks);
+        //cout << tokens[i] << " ";
+        i++;
+        toks = strtok(nullptr, " ");
+    }
+    delete[] cstr;
+
+}
+
+int mod(int m, int n){
+    return ((m % n) < 0)? (m % n) + n : m % n;
+}
+
+
+
+int modInverse(int a, int m)
+{
+    a = mod(a,m);
+    for (int x=1; x<m; x++)
+        if ((a*x) % m == 1)
+            return x;
 }

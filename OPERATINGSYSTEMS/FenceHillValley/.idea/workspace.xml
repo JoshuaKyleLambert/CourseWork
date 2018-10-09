@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/main.cpp" line="32" />
+  </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true" buildAllGenerated="true">
     <generated>
       <config projectName="FenceHillValley" targetName="FenceHillValley" />
@@ -12,11 +15,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="89e42b33-05e3-4a8a-97f5-2a5915fc20a5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FenceHillValley.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FenceHillValley.dir/CXX.includecache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FenceHillValley.dir/main.cpp.obj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FenceHillValley.dir/objects.a" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/FenceHillValley.dir/objects.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/FenceHillValley.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/FenceHillValley.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -77,13 +76,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="4264" />
+          <entry key="cpp" value="5403" />
           <entry key="txt" value="80" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="4264" />
+          <entry key="ObjectiveC" value="5403" />
           <entry key="PLAIN_TEXT" value="80" />
         </counts>
       </usages-collector>
@@ -103,20 +102,28 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-18">
-              <caret line="352" column="69" lean-forward="true" selection-start-line="352" selection-start-column="69" selection-end-line="352" selection-end-column="69" />
+            <state relative-caret-position="488">
+              <caret line="422" column="8" selection-start-line="422" selection-start-column="8" selection-end-line="422" selection-end-column="8" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#380#707#0" />
                 <element signature="e#709#2410#0" />
                 <element signature="e#2412#4153#0" />
+                <element signature="e#4155#5143#0" />
                 <element signature="e#5145#7964#0" />
+                <element signature="e#11860#11889#0" />
+                <element signature="e#12728#12792#0" />
+                <element signature="e#14390#14891#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <replaceStrings>
+      <replace>nullptr</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -217,7 +224,7 @@
       <workItem from="1538341785724" duration="2186000" />
       <workItem from="1538448428294" duration="6622000" />
       <workItem from="1538858246593" duration="19576000" />
-      <workItem from="1538918149029" duration="13042000" />
+      <workItem from="1538918149029" duration="23011000" />
     </task>
     <task id="LOCAL-00001" summary="3 tries, output looks a little better. no crazy looping and prompts are correct.">
       <created>1538453424251</created>
@@ -230,7 +237,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="104783000" />
+    <option name="totallyTimeSpent" value="114752000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="22" width="1936" height="1066" extended-state="6" />
@@ -246,7 +253,7 @@
       <window_info anchor="bottom" id="Message" order="4" />
       <window_info anchor="bottom" id="Find" order="5" />
       <window_info anchor="bottom" id="Database Changes" order="6" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.39484978" />
+      <window_info active="true" anchor="bottom" id="Run" order="7" visible="true" weight="0.2864807" />
       <window_info anchor="bottom" id="Debug" order="8" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="9" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="10" weight="0.4" />
@@ -280,14 +287,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-18">
-          <caret line="352" column="69" lean-forward="true" selection-start-line="352" selection-start-column="69" selection-end-line="352" selection-end-column="69" />
+        <state relative-caret-position="488">
+          <caret line="422" column="8" selection-start-line="422" selection-start-column="8" selection-end-line="422" selection-end-column="8" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#380#707#0" />
             <element signature="e#709#2410#0" />
             <element signature="e#2412#4153#0" />
+            <element signature="e#4155#5143#0" />
             <element signature="e#5145#7964#0" />
+            <element signature="e#11860#11889#0" />
+            <element signature="e#12728#12792#0" />
+            <element signature="e#14390#14891#0" />
           </folding>
         </state>
       </provider>
