@@ -16,18 +16,30 @@ struct threePartmessage {
 };
 
 void *sifterT(void *);
+
 void *decoderT(void *);
+
 void *fenceT(void *);
+
 void *hillT(void *);
+
 void *valleyT(void *);
+
 bool inputValidator(string message);
+
 int mod(int m, int n);
+
 int modInverse(int a, int m);
+
 threePartmessage messageCutter(string message);
+
 bool threePartMessageValidator(threePartmessage message);
+
 string vectorMul(string msg, int *tokens);
+
 string vectorMul2(string msg, int *tokens);
-void tokenize(string m, int &toki);
+
+void tokenize(string m, int *tokens, int size);
 
 string part1, part2, part3;
 
@@ -50,7 +62,7 @@ int main() {
 void *sifterT(void *in) {
     string *input = (string *) (in);
     string message;
-    string tries;
+    int tries = 0;
     for (int i = 0; i <= 3 && message != "exit"; i++) {
         cout << "Enter your message: ";
         getline(cin, message);
@@ -77,15 +89,14 @@ void *sifterT(void *in) {
             }
             //break;
         } else {
-            if (i == 0) tries = "twice";
-            if (i == 1) {
-                cout << "This is your last chance to enter a correct message: " << endl << "-->";
-            } else {
-                cout << "Invalid input, you may try " << tries << " again: " << endl;
-                cout << "-->";
+            tries++;
+            if (tries < 3)
+                cout << "Invalid input, you have " << 3 - tries << " tries remaining. " << endl;
+            else {
+                cout << "No more tries";
+                return EXIT_SUCCESS;
             }
             message.clear();
-            //getline(cin, message);
         }
     }
 
@@ -137,7 +148,7 @@ bool inputValidator(string message) {
                 break;
         }
     }
-   // cout << "Section 1: " << part1 << endl << "Section 2: " << part2 << endl << "Section 3: " << part3 << endl;
+    // cout << "Section 1: " << part1 << endl << "Section 2: " << part2 << endl << "Section 3: " << part3 << endl;
 
     if (valid && grabbed1 && grabbed2 && grabbed3) return true;
     else return false;
@@ -145,7 +156,6 @@ bool inputValidator(string message) {
 
 //Decoder Thread
 void *decoderT(void *in) {
-    void *threadPointer;
     pthread_t fence, hill, valley;
     if (pthread_create(&fence, nullptr, fenceT, &part1)) {
         cout << "Error creating Fence thread";
@@ -161,21 +171,21 @@ void *decoderT(void *in) {
     }
 
     if (pthread_join(hill, nullptr)) {
-        cout << "Error joining Hill thread" << threadPointer;
+        cout << "Error joining Hill thread";
         return 0;
     }
 
-        if (pthread_create(&valley, nullptr, valleyT, &part3)) {
-            cout << "Error creating Valley thread";
-            return 0;
-        }
+    if (pthread_create(&valley, nullptr, valleyT, &part3)) {
+        cout << "Error creating Valley thread";
+        return 0;
+    }
 
-        if (pthread_join(valley, nullptr)) {
-            cout << "Error joining Valley thread";
-            return 0;
-        }
+    if (pthread_join(valley, nullptr)) {
+        cout << "Error joining Valley thread";
+        return 0;
+    }
 
-        pthread_exit(0);
+    pthread_exit(0);
     return EXIT_SUCCESS;
 }
 
@@ -260,7 +270,7 @@ void *fenceT(void *in) {
             }
         }
         //uppercase for output
-        for(int i = 0; i < decrypted.length(); i++){
+        for (int i = 0; i < decrypted.length(); i++) {
             decrypted[i] = toupper(decrypted[i]);
         }
         cout << "<-FENCE---------------------->" << endl;
@@ -304,15 +314,17 @@ void *hillT(void *in) {
     }
     delete[] cstr;
 
+//    int *tokens = new int[messagetxt.section3.length()];
+//    tokenize(messagetxt.section3, tokens, messagetxt.section3.length());
 
     //Encrypt
     string encrypted;
 
-    if(messagetxt.section1 == 3) {
+    if (messagetxt.section1 == 3) {
         encrypted = vectorMul(messagetxt.section2, tokens);
     }
 
-    if(messagetxt.section1 == 2){
+    if (messagetxt.section1 == 2) {
         encrypted = vectorMul2(messagetxt.section2, tokens);
     }
 
@@ -328,14 +340,14 @@ void *hillT(void *in) {
 void *valleyT(void *in) {
     string *input = (string *) (in);
     string message = *input;
-    int Kinverse[] = {0,0,0,0,0,0,0,0,0};
+    int Kinverse[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     int determinant;
     int h;
     int m = 26;
 
     threePartmessage messagetxt;
     messagetxt = messageCutter(message);
-    if(!threePartMessageValidator(messagetxt)) {
+    if (!threePartMessageValidator(messagetxt)) {
         pthread_exit(0);
         return EXIT_SUCCESS;
     }
@@ -359,43 +371,43 @@ void *valleyT(void *in) {
 
     string decrypted;
 
-    if(messagetxt.section1 == 2){
+    if (messagetxt.section1 == 2) {
         determinant = tokens[0] * tokens[3] - tokens[1] * tokens[2];
-        h = modInverse(mod(determinant, m),m);
-        if (h == m){
+        h = modInverse(mod(determinant, m), m);
+        if (h == m) {
             cout << "Not relatively prime, cannot compute inverse." << endl;
             pthread_exit(0);
             return EXIT_SUCCESS;
         }
 
-        Kinverse[3] = mod(h * tokens[0],m);
-        Kinverse[1] = mod(-h * tokens[1],m);
-        Kinverse[2] = mod(-h * tokens[2],m);
-        Kinverse[0] = mod(h * tokens[3],m);
+        Kinverse[3] = mod(h * tokens[0], m);
+        Kinverse[1] = mod(-h * tokens[1], m);
+        Kinverse[2] = mod(-h * tokens[2], m);
+        Kinverse[0] = mod(h * tokens[3], m);
 
         decrypted = vectorMul2(messagetxt.section2, Kinverse);
     }
-    if(messagetxt.section1 == 3){
-        determinant = tokens[0]*(tokens[4] * tokens[8] - tokens[7]*tokens[5]) -
-                tokens[1]* (tokens[3] * tokens[8] - tokens[6]*tokens[5]) +
-                tokens[2] * (tokens[3] * tokens[7] - tokens[6]*tokens[4]);
-        if (modInverse(mod(determinant, 26),26) == 26){
+    if (messagetxt.section1 == 3) {
+        determinant = tokens[0] * (tokens[4] * tokens[8] - tokens[7] * tokens[5]) -
+                      tokens[1] * (tokens[3] * tokens[8] - tokens[6] * tokens[5]) +
+                      tokens[2] * (tokens[3] * tokens[7] - tokens[6] * tokens[4]);
+        if (modInverse(mod(determinant, 26), 26) == 26) {
             cout << "Not relatively prime, cannot compute inverse." << endl;
             pthread_exit(0);
             return EXIT_SUCCESS;
         }
-        h = modInverse(mod(determinant, 26),26);
+        h = modInverse(mod(determinant, 26), 26);
 
         // Calculate K inverse
-        Kinverse[0] = mod(h * (tokens[4] * tokens[8] - tokens[7]*tokens[5]), m);
-        Kinverse[1] = mod(-h * (tokens[1] * tokens[8] - tokens[7]*tokens[2]), m);
-        Kinverse[2] = mod(h * (tokens[1] * tokens[5] - tokens[4]*tokens[2]), m);
-        Kinverse[3] = mod(-h * (tokens[3] * tokens[8] - tokens[6]*tokens[5]), m);
-        Kinverse[4] = mod(h * (tokens[0] * tokens[8] - tokens[6]*tokens[2]), m);
-        Kinverse[5] = mod(-h * (tokens[0] * tokens[5] - tokens[3]*tokens[2]), m);
-        Kinverse[6] = mod(h * (tokens[3] * tokens[7] - tokens[6]*tokens[4]), m);
-        Kinverse[7] = mod(-h * (tokens[0] * tokens[7] - tokens[6]*tokens[1]), m);
-        Kinverse[8] = mod(h * (tokens[0] * tokens[4] - tokens[3]*tokens[1]), m);
+        Kinverse[0] = mod(h * (tokens[4] * tokens[8] - tokens[7] * tokens[5]), m);
+        Kinverse[1] = mod(-h * (tokens[1] * tokens[8] - tokens[7] * tokens[2]), m);
+        Kinverse[2] = mod(h * (tokens[1] * tokens[5] - tokens[4] * tokens[2]), m);
+        Kinverse[3] = mod(-h * (tokens[3] * tokens[8] - tokens[6] * tokens[5]), m);
+        Kinverse[4] = mod(h * (tokens[0] * tokens[8] - tokens[6] * tokens[2]), m);
+        Kinverse[5] = mod(-h * (tokens[0] * tokens[5] - tokens[3] * tokens[2]), m);
+        Kinverse[6] = mod(h * (tokens[3] * tokens[7] - tokens[6] * tokens[4]), m);
+        Kinverse[7] = mod(-h * (tokens[0] * tokens[7] - tokens[6] * tokens[1]), m);
+        Kinverse[8] = mod(h * (tokens[0] * tokens[4] - tokens[3] * tokens[1]), m);
 
         decrypted = vectorMul(messagetxt.section2, Kinverse);
 
@@ -407,7 +419,7 @@ void *valleyT(void *in) {
     return EXIT_SUCCESS;
 }
 
-threePartmessage messageCutter(string message){
+threePartmessage messageCutter(string message) {
     threePartmessage messageTxt_s;
 
     int i = 0;
@@ -437,7 +449,7 @@ threePartmessage messageCutter(string message){
     return messageTxt_s;
 }
 
-bool threePartMessageValidator(threePartmessage message){
+bool threePartMessageValidator(threePartmessage message) {
     // Validating input
     if (message.section1 == 2 && message.section2.length() % 2 != 0) {
         cout << "section2 has wrong length. Should be multiplicative 2 " << endl;
@@ -460,13 +472,13 @@ bool threePartMessageValidator(threePartmessage message){
     return true;
 }
 
-void tokenize(string m, int &toki){
+void tokenize(string m, int *tokens, int size) {
     //convert to uppercase
     for (int k = 0; k < m.length(); k++)
         m[k] = toupper(m[k]);
 
     //Tokenize
-    int *tokens = new int[m.length()];
+    //int *tokens = new int[m.length()];
     char *cstr = new char[m.length() + 1];
 
     strcpy(cstr, m.c_str());
@@ -480,15 +492,14 @@ void tokenize(string m, int &toki){
     delete[] cstr;
 }
 
-int mod(int m, int n){
-    return ((m % n) < 0)? (m % n) + n : m % n;
+int mod(int m, int n) {
+    return ((m % n) < 0) ? (m % n) + n : m % n;
 }
 
-int modInverse(int a, int m)
-{
-    a = mod(a,m);
-    for (int x=1; x<m; x++)
-        if ((a*x) % m == 1)
+int modInverse(int a, int m) {
+    a = mod(a, m);
+    for (int x = 1; x < m; x++)
+        if ((a * x) % m == 1)
             return x;
 }
 
@@ -511,7 +522,7 @@ string vectorMul(string msg, int *tokens) {
     return encrypted;
 }
 
-string vectorMul2(string msg, int *tokens){
+string vectorMul2(string msg, int *tokens) {
     string decrypted;
     for (int k = 0, m = 0; k < msg.length(); k += 2, m++) {
         decrypted += (char) (((((msg[k]) - 65) * tokens[0] +
