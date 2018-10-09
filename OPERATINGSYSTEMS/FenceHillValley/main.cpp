@@ -10,32 +10,23 @@
 
 using namespace std;
 
-
 struct threePartmessage {
     string section2, section3;
     int section1;
 };
 
 void *sifterT(void *);
-
 void *decoderT(void *);
-
 void *fenceT(void *);
-
 void *hillT(void *);
-
 void *valleyT(void *);
-
 bool inputValidator(string message);
-
 int mod(int m, int n);
-
 int modInverse(int a, int m);
-
 threePartmessage messageCutter(string message);
-
 bool threePartMessageValidator(threePartmessage message);
-
+string vectorMul(string msg, int *tokens);
+string vectorMul2(string msg, int *tokens);
 void tokenize(string m, int &toki);
 
 string part1, part2, part3;
@@ -58,11 +49,10 @@ int main() {
 //Sifter Thread
 void *sifterT(void *in) {
     string *input = (string *) (in);
-    string message;//"***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
+    string message;
     string tries;
     for (int i = 0; i <= 3 && message != "exit"; i++) {
-        //string message = "***3 rrlmwbkaspdh 17 17 5 21 18 21 2 2 19 12 *43125678812ttnaAptMTSUOaodwcoIXknLypETZ**3 GoodMorningJohn 3 2 1 20 15 4 10 22 3";
-        cout << "Enter your message: " << endl;
+        cout << "Enter your message: ";
         getline(cin, message);
         if (message == "exit") return EXIT_SUCCESS;
         part1.clear();
@@ -147,7 +137,7 @@ bool inputValidator(string message) {
                 break;
         }
     }
-    cout << "Section 1: " << part1 << endl << "Section 2: " << part2 << endl << "Section 3: " << part3 << endl;
+   // cout << "Section 1: " << part1 << endl << "Section 2: " << part2 << endl << "Section 3: " << part3 << endl;
 
     if (valid && grabbed1 && grabbed2 && grabbed3) return true;
     else return false;
@@ -197,7 +187,6 @@ void *fenceT(void *in) {
     int i = 0;
     //find repeated occurrence of numerical chars only
     //at the beginning of the string otherwise return 0;
-
     //first find length of section 1
 
     while (message[i] == ' ')i++; //ignore leading whitespace
@@ -238,7 +227,6 @@ void *fenceT(void *in) {
             for (int j = 0; j < p; j++) Keyb = Keyb + Key[j];
         }
     }
-    cout << section1 << endl << section2 << endl << Key << endl << Keyb << endl;
 
     // If q = p + 1 we'll use this instead
     if (Keyb.size() > 0) {
@@ -248,8 +236,6 @@ void *fenceT(void *in) {
         }
     }
 
-    cout << Key << " key here" << endl;
-
     // Check the validity  of the key using gauss's formula
     int correctSum = (Key.size() * (Key.size() + 1)) / 2;
     int keySum = 0;
@@ -258,8 +244,7 @@ void *fenceT(void *in) {
     if (keySum != correctSum) {
         cout << "Invalid Key sum." << endl;
         return 0;
-    } else
-        cout << "Correct Key sum." << endl;
+    }
 
     int groupeSize;
     int element;
@@ -268,7 +253,6 @@ void *fenceT(void *in) {
     //No need for matrix.
     if (!(section2.size() % Key.size())) {
         groupeSize = section2.size() / Key.size();
-        cout << "Decrypted text: " << endl;
         for (int i = 0; i < groupeSize; i++) {
             for (int j = 0; j < Key.size(); j++) {
                 element = ((groupeSize) * (Key[j] - 48)) - groupeSize + i;
@@ -279,7 +263,7 @@ void *fenceT(void *in) {
         for(int i = 0; i < decrypted.length(); i++){
             decrypted[i] = toupper(decrypted[i]);
         }
-        cout << "--------------Fence-----------------" << endl;
+        cout << "<-FENCE---------------------->" << endl;
         cout << decrypted << endl;
     } else {
         cout << " Invalid Message length. Exiting... " << endl;
@@ -292,10 +276,8 @@ void *fenceT(void *in) {
 void *hillT(void *in) {
     string *input = (string *) (in);
     string message = *input;
-    //string returnVal;
-    //string section2, section3;
-    //int section1 = 0;
-int i = 0;
+
+    int i = 0;
     threePartmessage messagetxt;
 
     messagetxt = messageCutter(message);
@@ -303,51 +285,6 @@ int i = 0;
         pthread_exit(0);
         return EXIT_SUCCESS;
     }
-
-    //    // Get message section1
-//    int i = 0;
-//    while (message[i] == ' ')i++;
-//    if (message[i] == '3' || message[i] == '2')
-//        section1 = message[i] - 48;
-//    else {
-//        returnVal = 1;
-//        cout << "invalid section 1,  not 2 or 3" << endl;
-//        pthread_exit(0);
-//    }
-//
-//    // Get message section 2 and 3
-//    i++;
-//    while (message[i] == ' ')i++;
-//    for (int j = i; j < message.length(); j++) {
-//        if (message[j] == ' ')
-//            continue;
-//        if (isalpha(message[j])) {
-//            section2 += message[j];
-//        }
-//        if (isdigit(message[j])) {
-//            section3 = message.substr(j, string::npos);
-//            break;
-//        }
-//    }
-//
-//    // Validating input
-//    if (section1 == 2 && section2.length() % 2 != 0) {
-//        cout << "section2 has wrong length. Should be multiplicative 2 " << endl;
-//        pthread_exit(0);
-//    }
-//
-//    if (section1 == 3 && section2.length() % 3 != 0) {
-//        cout << "section2 has wrong length. Should be multiplicative 3 " << endl;
-//        pthread_exit(0);
-//    }
-//
-//    for (int k = 0; k < section3.length(); k++) {
-//        if (section3[k] == ' ') continue;
-//        if (!isdigit(section3[k])) {
-//            cout << "invalid section3 contains non numerical chars. " << endl;
-//            pthread_exit(0);
-//        }
-//    }
 
     //convert to uppercase
     for (int k = 0; k < messagetxt.section2.length(); k++)
@@ -362,45 +299,25 @@ int i = 0;
     i = 0;
     while (toks != 0) {
         tokens[i] = atoi(toks);
-        //cout << tokens[i] << " ";
         i++;
         toks = strtok(nullptr, " ");
     }
     delete[] cstr;
 
 
-
     //Encrypt
     string encrypted;
 
     if(messagetxt.section1 == 3) {
-        for (int k = 0, m = 0; k < messagetxt.section2.length(); k += 3, m++) {
-
-            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[0] +
-                                   (messagetxt.section2[k + 1] - 65) * tokens[3] +
-                                   (messagetxt.section2[k + 2] - 65) * tokens[6]) % 26) + 65);
-
-            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[1] +
-                                   (messagetxt.section2[k + 1] - 65) * tokens[4] +
-                                   (messagetxt.section2[k + 2] - 65) * tokens[7]) % 26) + 65);
-
-            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[2] +
-                                   (messagetxt.section2[k + 1] - 65) * tokens[5] +
-                                   (messagetxt.section2[k + 2] - 65) * tokens[8]) % 26) + 65);
-        }
+        encrypted = vectorMul(messagetxt.section2, tokens);
     }
 
     if(messagetxt.section1 == 2){
-        for (int k = 0, m = 0; k < messagetxt.section2.length(); k += 2, m++) {
-            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[0] +
-                                   (messagetxt.section2[k + 1] - 65) * tokens[2]) % 26) + 65);
-
-            encrypted += (char) (((((messagetxt.section2[k]) - 65) * tokens[1] +
-                                   (messagetxt.section2[k + 1] - 65) * tokens[3]) % 26) + 65);
-        }
+        encrypted = vectorMul2(messagetxt.section2, tokens);
     }
 
-    cout << "--------------Hill------------------" << endl;
+    delete[] tokens;
+    cout << "<-HILL----------------------->" << endl;
     cout << encrypted << endl;
 
     pthread_exit(0);
@@ -411,20 +328,81 @@ int i = 0;
 void *valleyT(void *in) {
     string *input = (string *) (in);
     string message = *input;
+    int Kinverse[] = {0,0,0,0,0,0,0,0,0};
+    int determinant;
+    int h;
+    int m = 26;
 
-    threePartmessage messagetxt_s;
-    messagetxt_s = messageCutter(message);
-    if(!threePartMessageValidator(messagetxt_s)) {
+    threePartmessage messagetxt;
+    messagetxt = messageCutter(message);
+    if(!threePartMessageValidator(messagetxt)) {
         pthread_exit(0);
         return EXIT_SUCCESS;
     }
 
-    if(messagetxt_s.section1 == 2){
-        
+    for (int k = 0; k < messagetxt.section2.length(); k++)
+        messagetxt.section2[k] = toupper(messagetxt.section2[k]);
+
+    //Tokenize
+    int *tokens = new int[messagetxt.section3.length()];
+    char *cstr = new char[messagetxt.section3.length() + 1];
+
+    strcpy(cstr, messagetxt.section3.c_str());
+    char *toks = strtok(cstr, " ");
+    int i = 0;
+    while (toks != 0) {
+        tokens[i] = atoi(toks);
+        i++;
+        toks = strtok(nullptr, " ");
+    }
+    delete[] cstr;
+
+    string decrypted;
+
+    if(messagetxt.section1 == 2){
+        determinant = tokens[0] * tokens[3] - tokens[1] * tokens[2];
+        h = modInverse(mod(determinant, m),m);
+        if (h == m){
+            cout << "Not relatively prime, cannot compute inverse." << endl;
+            pthread_exit(0);
+            return EXIT_SUCCESS;
+        }
+
+        Kinverse[3] = mod(h * tokens[0],m);
+        Kinverse[1] = mod(-h * tokens[1],m);
+        Kinverse[2] = mod(-h * tokens[2],m);
+        Kinverse[0] = mod(h * tokens[3],m);
+
+        decrypted = vectorMul2(messagetxt.section2, Kinverse);
+    }
+    if(messagetxt.section1 == 3){
+        determinant = tokens[0]*(tokens[4] * tokens[8] - tokens[7]*tokens[5]) -
+                tokens[1]* (tokens[3] * tokens[8] - tokens[6]*tokens[5]) +
+                tokens[2] * (tokens[3] * tokens[7] - tokens[6]*tokens[4]);
+        if (modInverse(mod(determinant, 26),26) == 26){
+            cout << "Not relatively prime, cannot compute inverse." << endl;
+            pthread_exit(0);
+            return EXIT_SUCCESS;
+        }
+        h = modInverse(mod(determinant, 26),26);
+
+        // Calculate K inverse
+        Kinverse[0] = mod(h * (tokens[4] * tokens[8] - tokens[7]*tokens[5]), m);
+        Kinverse[1] = mod(-h * (tokens[1] * tokens[8] - tokens[7]*tokens[2]), m);
+        Kinverse[2] = mod(h * (tokens[1] * tokens[5] - tokens[4]*tokens[2]), m);
+        Kinverse[3] = mod(-h * (tokens[3] * tokens[8] - tokens[6]*tokens[5]), m);
+        Kinverse[4] = mod(h * (tokens[0] * tokens[8] - tokens[6]*tokens[2]), m);
+        Kinverse[5] = mod(-h * (tokens[0] * tokens[5] - tokens[3]*tokens[2]), m);
+        Kinverse[6] = mod(h * (tokens[3] * tokens[7] - tokens[6]*tokens[4]), m);
+        Kinverse[7] = mod(-h * (tokens[0] * tokens[7] - tokens[6]*tokens[1]), m);
+        Kinverse[8] = mod(h * (tokens[0] * tokens[4] - tokens[3]*tokens[1]), m);
+
+        decrypted = vectorMul(messagetxt.section2, Kinverse);
+
     }
 
-    cout << "--------------Valley----------------" << endl;
-    cout << modInverse(23, 26);
+    cout << "<-VALLEY--------------------->" << endl;
+    cout << decrypted << endl;
 
     return EXIT_SUCCESS;
 }
@@ -496,19 +474,15 @@ void tokenize(string m, int &toki){
     int i = 0;
     while (toks != 0) {
         tokens[i] = atoi(toks);
-        //cout << tokens[i] << " ";
         i++;
         toks = strtok(nullptr, " ");
     }
     delete[] cstr;
-
 }
 
 int mod(int m, int n){
     return ((m % n) < 0)? (m % n) + n : m % n;
 }
-
-
 
 int modInverse(int a, int m)
 {
@@ -516,4 +490,35 @@ int modInverse(int a, int m)
     for (int x=1; x<m; x++)
         if ((a*x) % m == 1)
             return x;
+}
+
+string vectorMul(string msg, int *tokens) {
+    string encrypted;
+    for (int k = 0, m = 0; k < msg.length(); k += 3, m++) {
+        encrypted += (char) (((((msg[k]) - 65) * tokens[0] +
+                               (msg[k + 1] - 65) * tokens[3] +
+                               (msg[k + 2] - 65) * tokens[6]) % 26) + 65);
+
+        encrypted += (char) (((((msg[k]) - 65) * tokens[1] +
+                               (msg[k + 1] - 65) * tokens[4] +
+                               (msg[k + 2] - 65) * tokens[7]) % 26) + 65);
+
+        encrypted += (char) (((((msg[k]) - 65) * tokens[2] +
+                               (msg[k + 1] - 65) * tokens[5] +
+                               (msg[k + 2] - 65) * tokens[8]) % 26) + 65);
+    }
+
+    return encrypted;
+}
+
+string vectorMul2(string msg, int *tokens){
+    string decrypted;
+    for (int k = 0, m = 0; k < msg.length(); k += 2, m++) {
+        decrypted += (char) (((((msg[k]) - 65) * tokens[0] +
+                               (msg[k + 1] - 65) * tokens[2]) % 26) + 65);
+
+        decrypted += (char) (((((msg[k]) - 65) * tokens[1] +
+                               (msg[k + 1] - 65) * tokens[3]) % 26) + 65);
+    }
+    return decrypted;
 }
